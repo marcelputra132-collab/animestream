@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+    content="Tonton anime online di AnimeStream — Video player dengan navigasi episode yang mudah.">
+
+  <meta name="theme-color" content="#0d0d14">
+
+  <title>Pemutar — AnimeStream</title>
+
+
+
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#6c5ce7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AnimeStream">
+
+
+
+  <link rel="stylesheet" href="css/style.css">
+
+
+
+  <style>
+    /* Tambahan style khusus halaman player */
+
+    .player-page-wrapper {
+
+      padding: var(--space-xl) 0 var(--space-2xl);
+
+    }
+
+
+
+    .breadcrumb {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      font-size: 0.8rem;
+
+      color: var(--clr-text-muted);
+
+      margin-bottom: var(--space-lg);
+
+      flex-wrap: wrap;
+
+    }
+
+
+
+    .breadcrumb a {
+
+      color: var(--clr-text-muted);
+
+      transition: color var(--transition-fast);
+
+    }
+
+
+
+    .breadcrumb a:hover {
+      color: var(--clr-primary);
+    }
+
+    .breadcrumb span {
+      color: var(--clr-text-dim);
+    }
+
+    .breadcrumb .sep {
+      color: var(--clr-border);
+    }
+
+
+
+    /* Keyboard hint */
+
+    .keyboard-hint {
+
+      font-size: 0.75rem;
+
+      color: var(--clr-text-muted);
+
+      text-align: center;
+
+      margin-top: var(--space-sm);
+
+    }
+
+
+
+    .kbd {
+
+      display: inline-block;
+
+      background: var(--clr-surface);
+
+      border: 1px solid var(--clr-border);
+
+      border-radius: 4px;
+
+      padding: 1px 6px;
+
+      font-size: 0.7rem;
+
+      font-family: monospace;
+    }
+
+    .btn-res {
+      background: transparent;
+      color: var(--clr-text-muted);
+      border: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-res:hover {
+      color: #fff;
+      background: rgba(124, 58, 237, 0.25);
+    }
+    .btn-res.active {
+      background: var(--clr-primary);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+    }
+  </style>
+
+</head>
+
+<body>
+
+
+
+  <!-- =============================================
+
+       NAVBAR
+
+       ============================================= -->
+
+  <nav class="navbar" role="navigation" aria-label="Navigasi Utama">
+
+    <div class="container navbar-inner">
+
+
+
+      <a href="index.html" class="navbar-logo" id="navbar-logo" aria-label="AnimeStream Beranda">
+
+        <div class="logo-icon">▶</div>
+
+        <span class="text-gradient">AnimeStream</span>
+
+      </a>
+
+
+
+      <div class="search-bar" role="search">
+
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          aria-hidden="true">
+
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+
+        </svg>
+
+        <input type="search" class="search-input" id="navbar-search" placeholder="Cari anime..." aria-label="Cari anime"
+          autocomplete="off">
+
+      </div>
+
+
+
+      <nav class="navbar-nav" id="main-nav" aria-label="Menu utama">
+
+        <a href="index.html" id="nav-home">Beranda</a>
+
+        <a href="search.html" id="nav-search">Daftar Anime</a>
+
+        <a href="#" id="nav-genre">Genre</a>
+
+        <a href="#" id="nav-schedule">Jadwal</a>
+
+      </nav>
+
+
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Buka menu">☰</button>
+
+
+
+    </div>
+
+  </nav>
+
+
+
+  <!-- =============================================
+
+       PLAYER PAGE
+
+       ============================================= -->
+
+  <main class="player-page-wrapper">
+
+    <div class="container">
+
+
+
+      <!-- Breadcrumb -->
+
+      <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb">
+
+        <a href="index.html">Beranda</a>
+
+        <span class="sep">›</span>
+
+        <span id="breadcrumb-anime">Memuat...</span>
+
+        <span class="sep">›</span>
+
+        <span id="breadcrumb-ep">Episode ?</span>
+
+      </nav>
+
+
+
+      <!-- Player Layout: Video + Sidebar -->
+
+      <div class="player-layout">
+
+
+
+        <!-- ── Kolom Kiri: Video ── -->
+
+        <div class="player-main">
+
+
+
+          <!-- Video Player -->
+
+          <div class="video-wrapper" id="video-wrapper" role="main" aria-label="Video Player">
+
+            <div class="video-placeholder">
+
+              <div class="spinner"></div>
+
+              <p style="margin-top:16px;color:var(--clr-text-muted)">Memuat video...</p>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- Video Control Bar -->
+
+          <div class="video-toolbar"
+            style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:8px 14px;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius-md);flex-wrap:wrap;gap:8px;">
+
+            <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--clr-text-muted);flex-wrap:wrap;">
+              <span>⚡ Server:</span>
+              <span id="server-badge" class="badge"
+                style="background:rgba(124,58,237,0.15);color:var(--clr-primary);border:1px solid rgba(124,58,237,0.3);font-size:0.78rem;">OtakuWatch HD</span>
+              <span style="color:var(--clr-border);">|</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span>🎬 Resolusi:</span>
+                <div id="quality-selector" style="display:inline-flex;gap:3px;background:var(--clr-bg-card);padding:2px;border-radius:8px;border:1px solid var(--clr-border);">
+                  <button type="button" class="btn-res" data-res="1080p" onclick="changeResolution('1080p')">1080p FHD</button>
+                  <button type="button" class="btn-res active" data-res="720p" onclick="changeResolution('720p')">720p HD</button>
+                  <button type="button" class="btn-res" data-res="480p" onclick="changeResolution('480p')">480p</button>
+                  <button type="button" class="btn-res" data-res="360p" onclick="changeResolution('360p')">360p</button>
+                  <button type="button" class="btn-res" data-res="144p" onclick="changeResolution('144p')">144p</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+
+              <button type="button" id="btn-reload-video" onclick="reloadCurrentVideo()" class="btn"
+                style="padding:6px 12px;font-size:0.8rem;background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);border-radius:6px;cursor:pointer;">
+
+                🔄 Muat Ulang
+
+              </button>
+
+              <a id="btn-open-tab" href="#" target="_blank" class="btn"
+                style="padding:6px 12px;font-size:0.8rem;background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+
+                ↗ Buka di Tab Baru
+
+              </a>
+
+            </div>
+
+          </div>
+
+          <!-- Smart Recommendation for Full Series -->
+          <div id="smart-recommendation"
+            style="display:none;margin-top:12px;padding:12px 16px;background:rgba(124,58,237,0.12);border:1px solid var(--clr-primary);border-radius:var(--radius-md);align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          </div>
+
+
+
+          <!-- Keyboard Hint -->
+
+          <div class="keyboard-hint" aria-hidden="true">
+
+            <kbd class="kbd">←</kbd> / <kbd class="kbd">P</kbd> Episode sebelumnya &nbsp;|&nbsp;
+
+            <kbd class="kbd">→</kbd> / <kbd class="kbd">N</kbd> Episode selanjutnya
+
+          </div>
+
+
+
+          <!-- Player Info -->
+
+          <div class="player-info">
+
+            <h1 class="player-title" id="player-anime-title">Memuat...</h1>
+
+            <p class="player-ep-title" id="player-ep-title"></p>
+
+
+
+            <div class="player-meta" id="player-meta" role="list" aria-label="Informasi anime">
+
+              <!-- Diisi oleh JavaScript -->
+
+            </div>
+
+
+
+            <!-- Episode Navigation Buttons -->
+
+            <div class="ep-nav" role="navigation" aria-label="Navigasi Episode">
+
+              <a href="#" class="btn btn-secondary" id="btn-prev-ep" disabled aria-label="Episode sebelumnya">
+
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+
+                  <path d="M15 18l-6-6 6-6" />
+
+                </svg>
+
+                Episode Sebelumnya
+
+              </a>
+
+              <a href="#" class="btn btn-primary" id="btn-next-ep" disabled aria-label="Episode selanjutnya">
+
+                Episode Selanjutnya
+
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+
+                  <path d="M9 18l6-6-6-6" />
+
+                </svg>
+
+              </a>
+
+            </div>
+
+
+
+            <!-- Synopsis -->
+
+            <div style="margin-top:var(--space-xl)">
+
+              <h2 style="font-size:1rem;font-weight:700;margin-bottom:var(--space-sm)">Sinopsis</h2>
+
+              <p class="synopsis-text collapsed" id="synopsis-text">
+
+                Memuat sinopsis...
+
+              </p>
+
+              <button class="synopsis-toggle" id="synopsis-toggle" aria-expanded="false">
+
+                Tampilkan Lebih
+
+              </button>
+
+            </div>
+
+
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ── Kolom Kanan: Sidebar ── -->
+
+        <aside class="sidebar" aria-label="Daftar Episode">
+
+          <div class="sidebar-card">
+
+            <div class="sidebar-header">
+
+              <h2 class="sidebar-title">📋 Daftar Episode</h2>
+
+              <span class="sidebar-count" id="episode-count">0 Episode</span>
+
+            </div>
+
+            <div class="ep-list-scroll" role="list" aria-label="Semua episode">
+
+              <div id="episode-list">
+
+                <!-- Diisi oleh JavaScript -->
+
+                <div class="spinner" style="margin:32px auto"></div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+
+  <!-- =============================================
+
+       FOOTER
+
+       ============================================= -->
+  <!-- Tombol Tonton Resmi Crunchyroll -->
+  <div class="official-watch-container" style="margin: 20px 0;">
+    <a id="btnCrunchyroll" href="https://www.crunchyroll.com" target="_blank" rel="noopener noreferrer"
+      style="display: inline-flex; align-items: center; gap: 8px; background-color: #f47521; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 15px;">
+      <span>Tonton Resmi di Crunchyroll &rarr;</span>
+    </a>
+  </div>
+  <footer class="footer" role="contentinfo">
+
+    <div class="container">
+
+      <div class="footer-bottom" style="padding-top:0;border-top:none">
+
+        <a href="index.html" class="navbar-logo">
+
+          <div class="logo-icon">▶</div>
+
+          <span class="text-gradient">AnimeStream</span>
+
+        </a>
+
+        <span style="font-size:.8rem;color:var(--clr-text-muted)">© 2024 AnimeStream. Untuk tujuan edukasi.</span>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- Toast Notification -->
+
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+
+
+  <!-- JavaScript -->
+
+  <script>
+
+    // Expose imgFallback globally untuk digunakan di inline onerror
+
+    function imgFallback(el) {
+
+      el.src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='50'><rect fill='%231c1c2e' width='80' height='50'/><text x='50%25' y='50%25' font-family='sans-serif' font-size='10' fill='%236b6b8a' text-anchor='middle' dy='.3em'>No Img</text></svg>";
+
+    }
+
+
+
+    // Update breadcrumb dari player.js
+
+    window.updateBreadcrumb = function (animeTitle, animeSlug, epNum) {
+
+      const animeEl = document.getElementById("breadcrumb-anime");
+
+      const epEl = document.getElementById("breadcrumb-ep");
+
+      if (animeEl) {
+
+        animeEl.innerHTML = `<a href="player.html?slug=${animeSlug}&ep=1">${animeTitle}</a>`;
+
+      }
+
+      if (epEl) epEl.textContent = `Episode ${epNum}`;
+
+    };
+
+  </script>
+
+  <script src="js/player.js"></script>
+
+
+
+  <script>
+
+    // Hook breadcrumb update setelah player load
+
+    const originalLoadEpisode = window.loadEpisode;
+
+    // Breadcrumb diperbarui dari dalam player.js via window.updateBreadcrumb
+
+  </script>
+
+
+
+</body>
+
+</html>

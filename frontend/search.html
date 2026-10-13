@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cari dan temukan anime favorit Anda di AnimeStream.">
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#6c5ce7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AnimeStream">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <div class="logo-icon">▶</div>
+        <span class="text-gradient">AnimeStream</span>
+      </a>
+      <div class="search-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" class="search-input" id="navbar-search" placeholder="Cari anime..." autocomplete="off">
+      </div>
+      <nav class="navbar-nav" id="main-nav">
+        <a href="index.html">Beranda</a>
+        <a href="search.html" class="active">Daftar Anime</a>
+        <a href="#">Genre</a>
+        <a href="#">Jadwal</a>
+      </nav>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <!-- SEARCH HERO -->
+  <section class="search-hero">
+    <div class="container">
+      <h1 class="search-hero-title">🔍 Temukan Anime</h1>
+      <form class="search-hero-bar" id="search-form" role="search">
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Ketik judul anime..."
+          aria-label="Cari anime"
+          autocomplete="off"
+        >
+        <button type="submit" id="search-btn">Cari</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <main class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" id="results-heading">
+          <div class="icon">🎌</div>
+          <span id="results-title">Semua Anime</span>
+        </h2>
+        <span id="results-count" style="font-size:.85rem;color:var(--clr-text-muted)"></span>
+      </div>
+      <div class="anime-grid" id="search-results" role="list">
+        <div class="spinner" style="margin:32px auto;grid-column:1/-1"></div>
+      </div>
+      <div id="load-more-container" style="text-align:center;margin:32px 0;display:none;">
+        <button id="btn-load-more" type="button" class="btn btn-secondary" style="padding:10px 28px;border-radius:20px;font-size:0.85rem;font-weight:600;">
+          ➕ Muat Lebih Banyak
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:0;border-top:none">
+        <a href="index.html" class="navbar-logo">
+          <div class="logo-icon">▶</div>
+          <span class="text-gradient">AnimeStream</span>
+        </a>
+        <span style="font-size:.8rem;color:var(--clr-text-muted)">© 2024 AnimeStream.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = window.location.origin && window.location.origin.startsWith("http")
+      ? window.location.origin
+      : "http://localhost:5000";
+
+    function imgFallback(el) {
+      el.src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='300'><rect fill='%231c1c2e' width='200' height='300'/><text x='50%25' y='50%25' font-family='sans-serif' font-size='14' fill='%236b6b8a' text-anchor='middle' dy='.3em'>No Image</text></svg>";
+    }
+
+    async function apiFetch(endpoint) {
+      const res = await fetch(`${API_BASE}${endpoint}`);
+      const json = await res.json();
+      return json.data;
+    }
+
+    function formatGenre(genre, status) {
+      if (!genre || genre === "Tidak diketahui" || genre.trim() === "") {
+        return status ? `${status} • Sub Indo` : "Anime Series";
+      }
+      const parts = genre.split(",").map(s => s.trim());
+      if (parts.length > 2) {
+        return parts.slice(0, 2).join(", ");
+      }
+      return genre;
+    }
+
+    function createCard(anime) {
+      const a = document.createElement("a");
+      a.href = `player.html?slug=${anime.slug}&ep=1`;
+      a.className = "anime-card animate-fade-up";
+      const epBadge = anime.ep_count > 0 
+        ? `<span class="anime-card-ep-badge" style="background:#6c5ce7;color:#fff;font-weight:600;">🟢 ${anime.ep_count} Eps</span>`
+        : (anime.total_eps ? `<span class="anime-card-ep-badge">${anime.total_eps} Eps</span>` : '');
+
+      a.innerHTML = `
+        <div class="anime-card-thumb">
+          <img src="${anime.thumbnail || ''}" alt="${anime.title}" loading="lazy" onerror="imgFallback(this)">
+          <div class="anime-card-overlay"><div class="anime-card-play">▶</div></div>
+          ${epBadge}
+          ${anime.score > 0 ? `<span class="anime-card-score">⭐ ${anime.score}</span>` : ''}
+        </div>
+        <div class="anime-card-body">
+          <div class="anime-card-title">${anime.title}</div>
+          <div class="anime-card-genre">${formatGenre(anime.genre, anime.status)}</div>
+        </div>
+      `;
+      return a;
+    }
+
+    let currentOffset = 0;
+    let currentQuery = "";
+    const PAGE_SIZE = 60;
+
+    async function loadAnimes(query = "", isLoadMore = false) {
+      const grid = document.getElementById("search-results");
+      const title = document.getElementById("results-title");
+      const count = document.getElementById("results-count");
+      const loadMoreContainer = document.getElementById("load-more-container");
+
+      if (!isLoadMore) {
+        currentOffset = 0;
+        currentQuery = query;
+        grid.innerHTML = '<div class="spinner" style="margin:32px auto;grid-column:1/-1"></div>';
+        if (loadMoreContainer) loadMoreContainer.style.display = "none";
+      }
+
+      try {
+        let endpoint = currentQuery
+          ? `/api/animes/search?q=${encodeURIComponent(currentQuery)}`
+          : `/api/animes?limit=${PAGE_SIZE}&offset=${currentOffset}`;
+
+        const animes = await apiFetch(endpoint);
+        title.textContent = currentQuery ? `Hasil: "${currentQuery}"` : "Daftar Semua Anime Siap Nonton";
+        
+        if (!isLoadMore) {
+          grid.innerHTML = "";
+        }
+
+        if (!animes || animes.length === 0) {
+          if (!isLoadMore) {
+            grid.innerHTML = '<p class="empty-state" style="grid-column:1/-1">Tidak ada anime ditemukan.</p>';
+            count.textContent = "0 hasil";
+          }
+          if (loadMoreContainer) loadMoreContainer.style.display = "none";
+          return;
+        }
+
+        animes.forEach(a => grid.appendChild(createCard(a)));
+        
+        const totalCards = grid.querySelectorAll(".anime-card").length;
+        count.textContent = currentQuery ? `${animes.length} hasil` : `Menampilkan ${totalCards} anime`;
+
+        if (!currentQuery && animes.length >= PAGE_SIZE) {
+          if (loadMoreContainer) loadMoreContainer.style.display = "block";
+        } else {
+          if (loadMoreContainer) loadMoreContainer.style.display = "none";
+        }
+      } catch (e) {
+        if (!isLoadMore) {
+          grid.innerHTML = '<p class="empty-state" style="grid-column:1/-1">⚠ Gagal memuat. Pastikan backend berjalan.</p>';
+        }
+      }
+    }
+
+    const btnLoadMore = document.getElementById("btn-load-more");
+    if (btnLoadMore) {
+      btnLoadMore.addEventListener("click", () => {
+        currentOffset += PAGE_SIZE;
+        loadAnimes(currentQuery, true);
+      });
+    }
+
+    // Form submit
+    document.getElementById("search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = document.getElementById("search-input").value.trim();
+      const url = new URL(window.location.href);
+      if (q) {
+        url.searchParams.set("q", q);
+      } else {
+        url.searchParams.delete("q");
+      }
+      window.history.pushState({}, "", url.toString());
+      loadAnimes(q);
+    });
+
+    // Navbar toggle
+    document.getElementById("menu-toggle").addEventListener("click", () => {
+      const nav = document.getElementById("main-nav");
+      nav.classList.toggle("open");
+    });
+
+    // Load on init
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q") || "";
+    if (q) document.getElementById("search-input").value = q;
+    loadAnimes(q);
+  </script>
+
+  <!-- Floating Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Navigasi Bawah">
+    <a href="index.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="search.html" class="mobile-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Cari Anime</span>
+    </a>
+    <a href="javascript:void(0)" onclick="location.reload()" class="mobile-nav-item" style="color:#a29bfe;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+      <span>Refresh 🔄</span>
+    </a>
+  </nav>
+
+</body>
+</html>

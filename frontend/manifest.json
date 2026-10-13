@@ -1,0 +1,27 @@
+{
+  "id": "com.animestream.app",
+  "name": "AnimeStream - Nonton Anime Sub Indo",
+  "short_name": "AnimeStream",
+  "description": "Aplikasi Streaming Anime Sub Indo Terlengkap dengan Kualitas Full HD",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#6c5ce7",
+  "orientation": "any",
+  "categories": ["entertainment", "video"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

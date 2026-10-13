@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AnimeStream — Nonton anime sub indo gratis, streaming online kualitas HD. Update terbaru setiap hari!">
+  <meta name="theme-color" content="#0d0d14">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="AnimeStream — Nonton Anime Online">
+  <meta property="og:description" content="Platform streaming anime terlengkap dengan update harian.">
+  <meta property="og:type" content="website">
+
+  <title>AnimeStream — Nonton Anime Online Gratis</title>
+
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#6c5ce7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AnimeStream">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- =============================================
+       NAVBAR
+       ============================================= -->
+  <nav class="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container navbar-inner">
+
+      <!-- Logo -->
+      <a href="index.html" class="navbar-logo" id="navbar-logo" aria-label="AnimeStream Beranda">
+        <div class="logo-icon">▶</div>
+        <span class="text-gradient">AnimeStream</span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="search-bar" role="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          class="search-input"
+          id="navbar-search"
+          placeholder="Cari anime..."
+          aria-label="Cari anime"
+          autocomplete="off"
+        >
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="navbar-nav" id="main-nav" aria-label="Menu utama">
+        <a href="index.html" class="active" id="nav-home">Beranda</a>
+        <a href="search.html" id="nav-search">Daftar Anime</a>
+        <a href="#" id="nav-genre">Genre</a>
+        <button id="btn-open-hp" type="button" onclick="openHpModal()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(108,92,231,0.15);color:#a29bfe;border:1px solid rgba(108,92,231,0.4);padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s ease;">
+          📱 Buka di HP
+        </button>
+        <button id="btn-install-pwa" type="button" style="display:none;align-items:center;gap:6px;background:linear-gradient(135deg, #6c5ce7, #a29bfe);color:#fff;border:none;padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;box-shadow:0 0 14px rgba(108,92,231,0.5);transition:all 0.2s ease;">
+          📲 Pasang Aplikasi
+        </button>
+      </nav>
+
+      <!-- Refresh HP & Hamburger -->
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button onclick="location.reload()" class="btn-top-refresh" aria-label="Segarkan Halaman" title="Refresh">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+          </svg>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Pull to Refresh Visual Indicator -->
+  <div id="pull-to-refresh" style="position:fixed;top:-60px;left:50%;transform:translateX(-50%);background:#1f2133;border:1px solid rgba(124,58,237,0.4);color:#a29bfe;padding:8px 16px;border-radius:30px;font-size:0.8rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,0.6);z-index:99999;transition:top 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);pointer-events:none;">
+    <span id="pull-icon" style="transition:transform 0.2s;font-size:1rem;">↓</span>
+    <span id="pull-text">Tarik untuk segarkan</span>
+  </div>
+
+  <!-- =============================================
+       HERO SECTION
+       ============================================= -->
+  <section class="hero" id="hero-section" aria-label="Anime Sorotan">
+    <!-- Diisi oleh JavaScript -->
+    <div class="container hero-content">
+      <div class="hero-badge">
+        <span>✦</span>
+        <span>Memuat...</span>
+      </div>
+      <h1 class="hero-title" style="min-height:3.5rem">
+        <span class="skeleton" style="display:inline-block;width:380px;height:3rem;border-radius:8px"></span>
+      </h1>
+      <div class="skeleton" style="height:70px;border-radius:8px;margin-bottom:24px"></div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       MAIN CONTENT
+       ============================================= -->
+  <main>
+
+    <!-- ── Banner Info Koleksi Besar ── -->
+    <div class="container" style="margin-top:14px;">
+      <div style="background:linear-gradient(135deg, rgba(124,58,237,0.18), rgba(6,182,212,0.12));border:1px solid rgba(124,58,237,0.35);border-radius:14px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,0.25);">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#e8e8f0;">
+          <span style="font-size:1.1rem;">🔥</span>
+          <span><b id="total-playable-text">1.320+ Judul Anime</b> Siap Tonton Tanpa Eror</span>
+        </div>
+        <a href="search.html" style="background:var(--grad-purple);color:#fff;padding:5px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;white-space:nowrap;box-shadow:0 2px 10px rgba(124,58,237,0.3);">
+          Lihat Semua ➔
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Anime Populer & Rating Tertinggi ── -->
+    <section class="section" aria-labelledby="popular-anime-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="popular-anime-heading">
+            <div class="icon" aria-hidden="true">⭐</div>
+            Populer & Rating Tertinggi
+          </h2>
+          <a href="search.html" class="section-link" aria-label="Lihat anime populer">Lihat Semua →</a>
+        </div>
+        <div class="anime-grid" id="popular-anime-grid" role="list" aria-label="Daftar anime populer">
+          <!-- Diisi oleh JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── Anime Terbaru ── -->
+    <section class="section" aria-labelledby="latest-anime-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="latest-anime-heading">
+            <div class="icon" aria-hidden="true">🔥</div>
+            Anime Terbaru
+          </h2>
+          <a href="search.html" class="section-link" aria-label="Lihat semua anime">Lihat Semua →</a>
+        </div>
+        <div class="anime-grid" id="latest-anime-grid" role="list" aria-label="Daftar anime terbaru">
+          <!-- Diisi oleh JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── Anime Tamat Lengkap ── -->
+    <section class="section" aria-labelledby="completed-anime-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="completed-anime-heading">
+            <div class="icon" aria-hidden="true">🏆</div>
+            Anime Tamat (Full Episode)
+          </h2>
+          <a href="search.html" class="section-link" aria-label="Lihat anime tamat">Lihat Semua →</a>
+        </div>
+        <div class="anime-grid" id="completed-anime-grid" role="list" aria-label="Daftar anime tamat">
+          <!-- Diisi oleh JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── Episode Terbaru ── -->
+    <section class="section" aria-labelledby="latest-episodes-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" id="latest-episodes-heading">
+            <div class="icon" aria-hidden="true">⚡</div>
+            Update Episode Terbaru
+          </h2>
+        </div>
+        <div class="episode-list-grid" id="latest-episodes-list" role="list" aria-label="Episode terbaru">
+          <div class="spinner" style="margin:32px auto"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =============================================
+       FOOTER
+       ============================================= -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="navbar-logo" style="margin-bottom:12px;display:inline-flex">
+            <div class="logo-icon">▶</div>
+            <span class="text-gradient">AnimeStream</span>
+          </a>
+          <p class="footer-desc">
+            Platform streaming anime modern dengan koleksi terlengkap.
+            Nikmati anime favorit Anda kapan saja dan di mana saja.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="footer-heading">Navigasi</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="search.html">Daftar Anime</a></li>
+            <li><a href="#">Ongoing</a></li>
+            <li><a href="#">Completed</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="footer-heading">Info</h3>
+          <ul class="footer-links">
+            <li><a href="#">Tentang Kami</a></li>
+            <li><a href="#">Kebijakan Privasi</a></li>
+            <li><a href="#">Hubungi Kami</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2024 AnimeStream. Dibuat untuk tujuan edukasi.</span>
+        <span>Made with ❤️ using Python + Vanilla JS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+  <!-- JavaScript -->
+  <script src="js/main.js"></script>
+
+  <!-- PWA Service Worker & Install Prompt -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+          console.log('[PWA] Service worker registration:', err);
+        });
+      });
+    }
+
+    let deferredPrompt = null;
+    const installBtn = document.getElementById('btn-install-pwa');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (installBtn) {
+        installBtn.style.display = 'inline-flex';
+      }
+    });
+
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
+          deferredPrompt = null;
+        } else {
+          alert('Untuk menginstall di PC/Laptop:\nKlik ikon pasang (tanda komputer / tambah) di sebelah kanan kolom URL browser Anda.');
+        }
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (installBtn) installBtn.style.display = 'none';
+      if (typeof showToast === 'function') {
+        showToast('🎉 Aplikasi AnimeStream berhasil dipasang!');
+      }
+    });
+
+    // ─────────────────────────────────────────────
+    //  MODAL BUKA DI HP (QR CODE & LAN LINK)
+    // ─────────────────────────────────────────────
+    async function openHpModal() {
+      const modal = document.getElementById('modal-hp');
+      if (!modal) return;
+      modal.style.display = 'flex';
+      
+      const linkSpan = document.getElementById('hp-link-text');
+      const qrImg = document.getElementById('hp-qr-img');
+      
+      if (linkSpan) {
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          linkSpan.textContent = window.location.origin;
+        } else {
+          try {
+            const res = await fetch('/api/server-info');
+            const resJson = await res.json();
+            if (resJson && resJson.data && resJson.data.lan_url) {
+              linkSpan.textContent = resJson.data.lan_url;
+            }
+          } catch (e) {
+            linkSpan.textContent = `http://${window.location.host}`;
+          }
+        }
+      }
+      if (qrImg) {
+        // Hindari caching QR Code
+        qrImg.src = '/icons/qrcode_hp.png?t=' + Date.now();
+      }
+    }
+
+    function closeHpModal() {
+      const modal = document.getElementById('modal-hp');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function copyHpLink() {
+      const linkSpan = document.getElementById('hp-link-text');
+      if (linkSpan) {
+        navigator.clipboard.writeText(linkSpan.textContent).then(() => {
+          if (typeof showToast === 'function') showToast('📋 Link berhasil disalin!');
+          else alert('Link berhasil disalin: ' + linkSpan.textContent);
+        });
+      }
+    }
+  </script>
+
+  <!-- Modal Buka di HP -->
+  <div id="modal-hp" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:16px;" onclick="if(event.target===this)closeHpModal()">
+    <div style="background:#13151f;border:1px solid var(--clr-primary);border-radius:18px;max-width:390px;width:100%;padding:26px 20px;box-shadow:0 12px 40px rgba(0,0,0,0.9);text-align:center;position:relative;">
+      <button onclick="closeHpModal()" type="button" style="position:absolute;top:12px;right:14px;background:transparent;border:none;color:#8a8aa0;font-size:1.4rem;cursor:pointer;line-height:1;">✕</button>
+      <h3 style="color:#fff;font-size:1.25rem;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span>📱</span> <span>Buka AnimeStream di HP</span>
+      </h3>
+      <p style="color:var(--clr-text-muted);font-size:0.83rem;margin-bottom:16px;">
+        Pastikan HP dan Komputer terhubung ke <b>WiFi yang sama</b>, lalu scan QR Code ini:
+      </p>
+
+      <div style="background:#ffffff;padding:12px;border-radius:14px;display:inline-block;box-shadow:0 4px 20px rgba(108,92,231,0.25);">
+        <img id="hp-qr-img" src="/icons/qrcode_hp.png" alt="Scan QR Code untuk HP" style="width:200px;height:200px;display:block;border-radius:6px;">
+      </div>
+
+      <div style="margin-top:16px;background:var(--clr-surface);border:1px solid var(--clr-border);padding:10px 14px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <span id="hp-link-text" style="font-family:monospace;font-size:0.85rem;color:#00cec9;word-break:break-all;">Memuat link...</span>
+        <button onclick="copyHpLink()" type="button" style="background:var(--clr-primary);color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:0.75rem;cursor:pointer;font-weight:600;white-space:nowrap;">Salin</button>
+      </div>
+
+      <div style="margin-top:14px;padding:10px;background:rgba(108,92,231,0.1);border-radius:10px;border:1px solid rgba(108,92,231,0.25);text-align:left;font-size:0.78rem;color:var(--clr-text-muted);">
+        <div style="font-weight:600;color:#a29bfe;margin-bottom:4px;">💡 Cara Pasang Jadi Aplikasi di HP:</div>
+        Setelah web terbuka di Chrome HP, klik menu <b>titik tiga (⋮)</b> di kanan atas &rarr; pilih <b>"Tambahkan ke Layar Utama" / "Install Aplikasi"</b>!
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Navigasi Bawah">
+    <a href="index.html" class="mobile-nav-item active">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="search.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Cari Anime</span>
+    </a>
+    <a href="javascript:void(0)" onclick="location.reload()" class="mobile-nav-item" style="color:#a29bfe;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+      <span>Refresh 🔄</span>
+    </a>
+    <a href="javascript:void(0)" onclick="openHpModal()" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+      <span>Info Link</span>
+    </a>
+  </nav>
+
+</body>
+</html>
