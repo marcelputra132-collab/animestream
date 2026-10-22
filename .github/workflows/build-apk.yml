@@ -21,20 +21,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build APK with Gradle
         working-directory: android_app
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
         run: |
           gradle assembleDebug --no-daemon --stacktrace
-          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/AnimeStream.apk
+          mkdir -p ../dist
+          cp app/build/outputs/apk/debug/*.apk ../dist/AnimeStream.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AnimeStream-APK
-          path: android_app/app/build/outputs/apk/debug/AnimeStream.apk
+          path: dist/AnimeStream.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -45,11 +48,11 @@ jobs:
             ## 📱 AnimeStream APK Siap Download & Pasang
             Aplikasi resmi AnimeStream Android (Direct APK).
             
-            ### Cara Pasang:
+            ### Cara Pasang di HP:
             1. Download file **`AnimeStream.apk`** di bawah ini.
             2. Buka file `.apk` di HP Android Anda.
             3. Jika muncul peringatan *"Izinkan pemasangan dari sumber ini"*, pilih **Izinkan**.
             4. Klik **Install / Pasang**, lalu buka aplikasi!
-          files: android_app/app/build/outputs/apk/debug/AnimeStream.apk
+          files: dist/AnimeStream.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
