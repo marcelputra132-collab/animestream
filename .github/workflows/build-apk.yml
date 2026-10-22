@@ -20,6 +20,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
       - name: Accept Android SDK Licenses
         run: |
@@ -27,17 +28,13 @@ jobs:
           echo "24333f8a63b182405643d18765195062a0a4d0fe" > /usr/local/lib/android/sdk/licenses/android-sdk-license
           echo "84831b9409646a918e30573bab4c9c91346d8abd" > /usr/local/lib/android/sdk/licenses/android-sdk-preview-license
 
-      - name: Setup Gradle 8.5 & Build APK
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.5'
-          build-root-directory: android_app
-          arguments: assembleDebug --stacktrace
-
-      - name: Copy Built APK
+      - name: Build APK with Gradle Wrapper
+        working-directory: android_app
         run: |
-          mkdir -p dist
-          cp android_app/app/build/outputs/apk/debug/*.apk dist/AnimeStream.apk
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+          mkdir -p ../dist
+          cp app/build/outputs/apk/debug/*.apk ../dist/AnimeStream.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
