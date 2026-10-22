@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
     private void showServerSettingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pengaturan Alamat Server");
-        builder.setMessage("Masukkan alamat server AnimeStream (Laptop/PC):");
+        builder.setMessage("Masukkan alamat server Otakux (Laptop/PC):");
 
         final EditText input = new EditText(this);
         input.setText(prefs.getString(KEY_SERVER_URL, DEFAULT_URL));

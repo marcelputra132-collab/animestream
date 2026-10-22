@@ -1,4 +1,4 @@
-name: Build AnimeStream APK
+name: Build Otakux APK
 
 on:
   push:
@@ -34,28 +34,31 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
           mkdir -p ../dist
+          cp app/build/outputs/apk/debug/*.apk ../dist/Otakux.apk
           cp app/build/outputs/apk/debug/*.apk ../dist/AnimeStream.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AnimeStream-APK
-          path: dist/AnimeStream.apk
+          name: Otakux-APK
+          path: dist/Otakux.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: AnimeStream APK v1.0.${{ github.run_number }} (Direct Download)
+          name: Otakux APK v1.0.${{ github.run_number }} (Direct Download)
           body: |
-            ## 📱 AnimeStream APK Siap Download & Pasang
-            Aplikasi resmi AnimeStream Android (Direct APK).
+            ## 📱 Otakux APK Siap Download & Pasang
+            Aplikasi resmi Otakux Android dengan Logo "X" & Streaming Direct HD.
             
-            ### Cara Pasang di HP:
-            1. Download file **`AnimeStream.apk`** di bawah ini.
-            2. Buka file `.apk` di HP Android Anda.
+            ### Cara Pasang di HP / BlueStacks:
+            1. Download file **`Otakux.apk`** di bawah ini.
+            2. Buka file `.apk` di HP Android / BlueStacks Anda.
             3. Jika muncul peringatan *"Izinkan pemasangan dari sumber ini"*, pilih **Izinkan**.
-            4. Klik **Install / Pasang**, lalu buka aplikasi!
-          files: dist/AnimeStream.apk
+            4. Klik **Install / Pasang**, lalu buka aplikasi **Otakux**!
+          files: |
+            dist/Otakux.apk
+            dist/AnimeStream.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
