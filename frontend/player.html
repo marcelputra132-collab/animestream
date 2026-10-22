@@ -9,115 +9,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="description"
-    content="Tonton anime online di AnimeStream — Video player dengan navigasi episode yang mudah.">
+    content="Tonton anime online di Otakux — Video player dengan navigasi episode yang mudah.">
 
   <meta name="theme-color" content="#0d0d14">
 
-  <title>Pemutar — AnimeStream</title>
-
-
+  <title>Pemutar — Otakux</title>
 
   <!-- PWA Manifest & App Icons -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <meta name="theme-color" content="#6c5ce7">
+  <link rel="manifest" href="manifest.json?v=otakux_v4">
+  <link rel="icon" type="image/png" href="icons/icon-192.png?v=x_v4">
+  <link rel="apple-touch-icon" href="icons/icon-512.png?v=x_v4">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="AnimeStream">
+  <meta name="apple-mobile-web-app-title" content="Otakux">
 
 
 
-  <link rel="stylesheet" href="css/style.css">
-
-
+  <link rel="stylesheet" href="css/style.css?v=20">
 
   <style>
-    /* Tambahan style khusus halaman player */
-
-    .player-page-wrapper {
-
-      padding: var(--space-xl) 0 var(--space-2xl);
-
+    /* ── Anti Overflow & Global Lock ── */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+      max-width: 100%;
     }
 
-
+    /* Style dasar halaman player */
+    .player-page-wrapper {
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
 
     .breadcrumb {
-
       display: flex;
-
       align-items: center;
-
       gap: 6px;
-
       font-size: 0.8rem;
-
       color: var(--clr-text-muted);
-
       margin-bottom: var(--space-lg);
-
       flex-wrap: wrap;
-
     }
-
-
-
     .breadcrumb a {
-
       color: var(--clr-text-muted);
-
       transition: color var(--transition-fast);
-
     }
-
-
-
-    .breadcrumb a:hover {
-      color: var(--clr-primary);
-    }
-
-    .breadcrumb span {
-      color: var(--clr-text-dim);
-    }
-
-    .breadcrumb .sep {
-      color: var(--clr-border);
-    }
-
-
+    .breadcrumb a:hover { color: var(--clr-primary); }
+    .breadcrumb span { color: var(--clr-text-dim); }
+    .breadcrumb .sep { color: var(--clr-border); }
 
     /* Keyboard hint */
-
     .keyboard-hint {
-
       font-size: 0.75rem;
-
       color: var(--clr-text-muted);
-
       text-align: center;
-
       margin-top: var(--space-sm);
-
     }
-
-
-
     .kbd {
-
       display: inline-block;
-
       background: var(--clr-surface);
-
       border: 1px solid var(--clr-border);
-
       border-radius: 4px;
-
       padding: 1px 6px;
-
       font-size: 0.7rem;
-
       font-family: monospace;
     }
 
@@ -131,6 +91,7 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
     .btn-res:hover {
       color: #fff;
@@ -140,6 +101,329 @@
       background: var(--clr-primary);
       color: #fff;
       box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+    }
+
+    /* ── Quick Episode Nav (Next / Prev) langsung di bawah video ── */
+    .video-ep-quick-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .btn-ep-quick {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      flex: 1;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .btn-ep-quick:hover:not(:disabled) {
+      background: rgba(124, 58, 237, 0.25);
+      border-color: rgba(124, 58, 237, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-ep-quick:disabled,
+    .btn-ep-quick.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-ep-next-glow {
+      background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.5);
+      flex: 1.35;
+      animation: nextBtnPulse 3s infinite ease-in-out;
+    }
+
+    .btn-ep-next-glow:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 26px rgba(6, 182, 212, 0.7);
+    }
+
+    @keyframes nextBtnPulse {
+      0%, 100% { box-shadow: 0 4px 18px rgba(124, 58, 237, 0.45); }
+      50% { box-shadow: 0 4px 26px rgba(6, 182, 212, 0.65); }
+    }
+
+    .current-ep-indicator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      background: rgba(19, 21, 31, 0.85);
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #c4b5fd;
+      white-space: nowrap;
+    }
+
+    /* In-Player Next Episode Button (Di dalam layar pemutar / Fullscreen) */
+    .in-player-next-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 50;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(13, 13, 20, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #fff;
+      border: 1px solid rgba(167, 139, 250, 0.45);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 16px rgba(124, 58, 237, 0.45);
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.35s ease, transform 0.25s ease, background 0.25s ease;
+      user-select: none;
+      opacity: 1;
+    }
+
+    .in-player-next-btn:hover {
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 6px 24px rgba(6, 182, 212, 0.65);
+    }
+
+    .in-player-next-btn.fade-out {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    .in-player-next-btn:disabled,
+    .in-player-next-btn.disabled {
+      display: none !important;
+    }
+
+    #video-wrapper, #video-wrapper video, #video-wrapper iframe {
+      -webkit-touch-callout: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+
+    .floating-speed-badge {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      background: rgba(15, 17, 23, 0.92);
+      border: 1px solid #00cec9;
+      color: #00cec9;
+      padding: 7px 18px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 35;
+      box-shadow: 0 0 25px rgba(0, 206, 201, 0.6);
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .floating-speed-badge.show {
+      display: inline-flex !important;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* =============================================
+       RESPONSIVE HP (MAX-WIDTH 768px)
+       ============================================= */
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        width: 100% !important;
+      }
+      .player-page-wrapper {
+        padding-top: 6px !important;
+        padding-bottom: 24px !important;
+      }
+      .breadcrumb, .keyboard-hint {
+        display: none !important;
+      }
+      .player-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+      }
+      .video-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        aspect-ratio: 16/9 !important;
+        border-radius: 10px !important;
+        margin: 0 !important;
+      }
+      .video-toolbar {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding: 8px !important;
+        margin-top: 8px !important;
+        gap: 8px !important;
+        border-radius: 10px !important;
+        background: var(--clr-surface) !important;
+        width: 100% !important;
+      }
+      .video-toolbar-top {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+      }
+      .video-toolbar-top::-webkit-scrollbar { display: none; }
+      #quality-selector {
+        display: flex !important;
+        gap: 2px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+        flex-shrink: 0 !important;
+      }
+      #quality-selector::-webkit-scrollbar { display: none; }
+      .btn-res {
+        padding: 3px 7px !important;
+        font-size: 0.68rem !important;
+      }
+      .video-toolbar-bottom {
+        display: flex !important;
+        width: 100% !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 4px !important;
+      }
+      .video-toolbar-bottom::-webkit-scrollbar { display: none; }
+      .video-toolbar-bottom .btn,
+      .video-toolbar-bottom .playback-speed-container {
+        flex-shrink: 0 !important;
+      }
+      .video-toolbar-bottom .btn {
+        justify-content: center !important;
+        padding: 7px 10px !important;
+        font-size: 0.74rem !important;
+        border-radius: 8px !important;
+        white-space: nowrap !important;
+      }
+      .player-info {
+        margin-top: 8px !important;
+      }
+      .player-title {
+        font-size: 1.05rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 2px !important;
+        word-break: break-word !important;
+      }
+      .player-ep-title {
+        font-size: 0.8rem !important;
+        margin-bottom: 8px !important;
+        color: #a78bfa !important;
+      }
+      .player-meta {
+        gap: 6px !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 8px !important;
+        font-size: 0.72rem !important;
+      }
+      .player-meta .badge {
+        font-size: 0.62rem !important;
+        padding: 2px 6px !important;
+      }
+      .ep-nav {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+        width: 100% !important;
+      }
+      .ep-nav .btn {
+        flex: 1 !important;
+        padding: 8px 10px !important;
+        font-size: 0.74rem !important;
+        border-radius: 8px !important;
+        white-space: nowrap !important;
+        justify-content: center !important;
+      }
+      .sidebar {
+        margin-top: 10px !important;
+        position: static !important;
+        width: 100% !important;
+      }
+      .sidebar-card {
+        border-radius: 12px !important;
+        width: 100% !important;
+      }
+      .sidebar-header {
+        padding: 8px 12px !important;
+      }
+      .sidebar-title {
+        font-size: 0.85rem !important;
+      }
+      .ep-list-scroll {
+        max-height: 360px !important;
+      }
+      .ep-list-item {
+        padding: 8px 10px !important;
+        gap: 8px !important;
+      }
+      .ep-list-num {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.72rem !important;
+        border-radius: 6px !important;
+      }
+      .ep-list-title {
+        font-size: 0.78rem !important;
+      }
+      .video-ep-quick-nav {
+        gap: 6px !important;
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+      }
+      .btn-ep-quick {
+        padding: 9px 8px !important;
+        font-size: 0.74rem !important;
+        border-radius: 10px !important;
+        gap: 4px !important;
+      }
+      .current-ep-indicator {
+        padding: 8px 6px !important;
+        font-size: 0.68rem !important;
+      }
     }
   </style>
 
@@ -161,12 +445,9 @@
 
 
 
-      <a href="index.html" class="navbar-logo" id="navbar-logo" aria-label="AnimeStream Beranda">
-
-        <div class="logo-icon">▶</div>
-
-        <span class="text-gradient">AnimeStream</span>
-
+      <a href="index.html" class="navbar-logo" id="navbar-logo" aria-label="Otakux Beranda">
+        <img src="icons/otakux_icon_192.png" alt="Otakux Logo" class="navbar-logo-img">
+        <span class="text-gradient">Otakux</span>
       </a>
 
 
@@ -194,15 +475,18 @@
 
         <a href="search.html" id="nav-search">Daftar Anime</a>
 
-        <a href="#" id="nav-genre">Genre</a>
+        <a href="genre.html" id="nav-genre">Genre</a>
 
-        <a href="#" id="nav-schedule">Jadwal</a>
+        <a href="schedule.html" id="nav-schedule">Jadwal</a>
 
       </nav>
 
 
 
-      <button class="menu-toggle" id="menu-toggle" aria-label="Buka menu">☰</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="nav-user-slot"></div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Buka menu">☰</button>
+      </div>
 
 
 
@@ -255,61 +539,103 @@
 
 
           <!-- Video Player -->
-
-          <div class="video-wrapper" id="video-wrapper" role="main" aria-label="Video Player">
-
-            <div class="video-placeholder">
-
-              <div class="spinner"></div>
-
-              <p style="margin-top:16px;color:var(--clr-text-muted)">Memuat video...</p>
-
+          <div style="position:relative;width:100%;">
+            <div class="video-wrapper" id="video-wrapper" role="main" aria-label="Video Player">
+              <div class="video-placeholder">
+                <div class="spinner"></div>
+                <p style="margin-top:16px;color:var(--clr-text-muted)">Memuat video...</p>
+              </div>
+              <!-- In-Player Next Episode Button (Bisa diakses langsung di mode landscape / fullscreen tanpa keluar) -->
+              <button type="button" id="in-player-next-btn" class="in-player-next-btn" onclick="goToNextEp()" title="Episode Selanjutnya" style="display:none;">
+                <span>Next Eps</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+              </button>
             </div>
 
+            <!-- Floating 2X Speed Badge saat Long-Press -->
+            <div id="floating-speed-badge" class="floating-speed-badge" style="display:none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.05.5-9 4.77-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.01-4.09l-2.49-1.46C16.14 17.84 14.2 19 12 19zm1-8.5v4.5l3.5-2.25L13 10.5z"/></svg>
+              <span>⚡ 2X Kecepatan</span>
+            </div>
           </div>
 
+          <!-- Quick Episode Navigation (Next / Prev) -->
+          <div class="video-ep-quick-nav">
+            <button type="button" id="btn-quick-prev" class="btn-ep-quick" onclick="goToPrevEp()" title="Episode Sebelumnya" disabled>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+              <span>Eps Sebelumnya</span>
+            </button>
+            
+            <div class="current-ep-indicator">
+              <span id="quick-ep-badge">Memuat Episode...</span>
+            </div>
 
+            <button type="button" id="btn-quick-next" class="btn-ep-quick btn-ep-next-glow" onclick="goToNextEp()" title="Episode Selanjutnya">
+              <span>Eps Selanjutnya</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+          </div>
 
           <!-- Video Control Bar -->
-
-          <div class="video-toolbar"
-            style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:8px 14px;background:var(--clr-surface);border:1px solid var(--clr-border);border-radius:var(--radius-md);flex-wrap:wrap;gap:8px;">
-
-            <div style="display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--clr-text-muted);flex-wrap:wrap;">
-              <span>⚡ Server:</span>
-              <span id="server-badge" class="badge"
-                style="background:rgba(124,58,237,0.15);color:var(--clr-primary);border:1px solid rgba(124,58,237,0.3);font-size:0.78rem;">OtakuWatch HD</span>
-              <span style="color:var(--clr-border);">|</span>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span>🎬 Resolusi:</span>
-                <div id="quality-selector" style="display:inline-flex;gap:3px;background:var(--clr-bg-card);padding:2px;border-radius:8px;border:1px solid var(--clr-border);">
-                  <button type="button" class="btn-res" data-res="1080p" onclick="changeResolution('1080p')">1080p FHD</button>
-                  <button type="button" class="btn-res active" data-res="720p" onclick="changeResolution('720p')">720p HD</button>
+          <div class="video-toolbar">
+            <div class="video-toolbar-top">
+              <div id="server-indicator-box" style="display:none !important;">
+                <span id="server-badge" class="badge" style="display:none !important;"></span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;width:100%;justify-content:space-between;">
+                <span style="font-size:0.8rem;color:var(--clr-text-muted);font-weight:600;display:flex;align-items:center;gap:4px;">
+                  <span>⚡ Kualitas Video:</span>
+                </span>
+                <div id="quality-selector" style="display:inline-flex;gap:2px;background:var(--clr-bg-card);padding:2px;border-radius:6px;border:1px solid var(--clr-border);">
+                  <button type="button" class="btn-res" data-res="1080p" onclick="changeResolution('1080p')">1080p</button>
+                  <button type="button" class="btn-res active" data-res="720p" onclick="changeResolution('720p')">720p</button>
                   <button type="button" class="btn-res" data-res="480p" onclick="changeResolution('480p')">480p</button>
                   <button type="button" class="btn-res" data-res="360p" onclick="changeResolution('360p')">360p</button>
                   <button type="button" class="btn-res" data-res="144p" onclick="changeResolution('144p')">144p</button>
                 </div>
               </div>
             </div>
-
-            <div style="display:flex;gap:8px;">
-
-              <button type="button" id="btn-reload-video" onclick="reloadCurrentVideo()" class="btn"
-                style="padding:6px 12px;font-size:0.8rem;background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);border-radius:6px;cursor:pointer;">
-
-                🔄 Muat Ulang
-
+            <div class="video-toolbar-bottom">
+              <button type="button" id="btn-rotate-screen" onclick="toggleRotateFullscreen()" class="btn" style="background:rgba(124,58,237,0.25);color:#fff;border:1px solid #7c3aed;font-weight:600;" title="Putar layar ke mode miring (Landscape)">
+                🔄 Layar Miring (Landscape)
               </button>
 
-              <a id="btn-open-tab" href="#" target="_blank" class="btn"
-                style="padding:6px 12px;font-size:0.8rem;background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);border-radius:6px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+              <!-- Pengatur Kecepatan Putar (Playback Speed) -->
+              <div class="playback-speed-container" id="playback-speed-container">
+                <button type="button" id="btn-playback-speed" onclick="togglePlaybackSpeedMenu(event)" class="btn" style="background:rgba(124,58,237,0.18);color:#c4b5fd;border:1px solid rgba(124,58,237,0.4);font-weight:600;" title="Atur Kecepatan Putar Video">
+                  ⚡ 1.0x
+                </button>
+                <div id="playback-speed-menu" class="playback-speed-menu" style="display:none;">
+                  <div class="speed-menu-title">⚡ Kecepatan Putar</div>
+                  <div class="speed-options-grid">
+                    <button type="button" class="speed-opt" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+                    <button type="button" class="speed-opt active" data-speed="1.0" onclick="setPlaybackSpeed(1.0)">1.0x (Normal)</button>
+                    <button type="button" class="speed-opt" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+                    <button type="button" class="speed-opt" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+                    <button type="button" class="speed-opt" data-speed="2.0" onclick="setPlaybackSpeed(2.0)">2.0x</button>
+                  </div>
+                </div>
+              </div>
 
+              <!-- Tombol Download Episode (Direct MP4 untuk Offline) -->
+              <button type="button" id="btn-download-ep" onclick="downloadCurrentEpisode()" class="btn btn-download-ep" style="background:linear-gradient(135deg, rgba(16,185,129,0.22), rgba(6,182,212,0.18));color:#34d399;border:1px solid rgba(16,185,129,0.5);font-weight:700;" title="Simpan episode ini ke memori HP untuk ditonton saat offline">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                <span>Unduh MP4</span>
+              </button>
+
+              <button type="button" id="btn-switch-server" onclick="switchAlternativeServer()" class="btn" style="background:rgba(124,58,237,0.18);color:#c4b5fd;border:1px solid rgba(124,58,237,0.4);">
+                ⚡ Ganti Server
+              </button>
+              <button type="button" id="btn-pip-mode" onclick="togglePictureInPicture()" class="btn" style="background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);" title="Nonton sambil buka aplikasi lain">
+                📺 Pop-out (PiP)
+              </button>
+              <button type="button" id="btn-reload-video" onclick="reloadCurrentVideo()" class="btn" style="background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);">
+                🔄 Muat Ulang
+              </button>
+              <a id="btn-open-tab" href="#" target="_blank" class="btn" style="background:var(--clr-bg-card);color:var(--clr-text);border:1px solid var(--clr-border);text-decoration:none;">
                 ↗ Buka di Tab Baru
-
               </a>
-
             </div>
-
           </div>
 
           <!-- Smart Recommendation for Full Series -->
@@ -342,69 +668,96 @@
 
 
             <div class="player-meta" id="player-meta" role="list" aria-label="Informasi anime">
-
               <!-- Diisi oleh JavaScript -->
-
             </div>
 
+            <!-- Action Bar: Like, Bookmark, Share, Views -->
+            <div class="anime-action-bar" id="anime-action-bar">
+              <div class="action-buttons-group">
+                <button type="button" class="btn-action" id="btn-like-anime" onclick="toggleAnimeLike()">
+                  <span class="icon-heart">❤️</span>
+                  <span id="label-like-count">Suka (0)</span>
+                </button>
+                <button type="button" class="btn-action" id="btn-fav-anime" onclick="toggleAnimeBookmark()">
+                  <span class="icon-star">⭐</span>
+                  <span id="label-fav">Favorit</span>
+                </button>
+                <button type="button" class="btn-action" id="btn-share-anime" onclick="shareCurrentAnime()">
+                  <span>📤</span>
+                  <span>Bagikan</span>
+                </button>
+              </div>
+              <div class="action-stats-badge">
+                <span>👁️</span>
+                <span id="views-count-text">0 Ditonton</span>
+              </div>
+            </div>
 
-
-            <!-- Episode Navigation Buttons -->
-
+            <!-- Episode Navigation Buttons (SPA - Tanpa Reload) -->
             <div class="ep-nav" role="navigation" aria-label="Navigasi Episode">
-
-              <a href="#" class="btn btn-secondary" id="btn-prev-ep" disabled aria-label="Episode sebelumnya">
-
+              <button type="button" class="btn btn-secondary" id="btn-prev-ep" onclick="goToPrevEp()" disabled aria-label="Episode sebelumnya">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-
                   <path d="M15 18l-6-6 6-6" />
-
                 </svg>
-
                 Episode Sebelumnya
-
-              </a>
-
-              <a href="#" class="btn btn-primary" id="btn-next-ep" disabled aria-label="Episode selanjutnya">
-
+              </button>
+              <button type="button" class="btn btn-primary" id="btn-next-ep" onclick="goToNextEp()" disabled aria-label="Episode selanjutnya">
                 Episode Selanjutnya
-
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-
                   <path d="M9 18l6-6-6-6" />
-
                 </svg>
-
-              </a>
-
+              </button>
             </div>
-
-
 
             <!-- Synopsis -->
-
             <div style="margin-top:var(--space-xl)">
-
               <h2 style="font-size:1rem;font-weight:700;margin-bottom:var(--space-sm)">Sinopsis</h2>
-
               <p class="synopsis-text collapsed" id="synopsis-text">
-
                 Memuat sinopsis...
-
               </p>
-
               <button class="synopsis-toggle" id="synopsis-toggle" aria-expanded="false">
-
                 Tampilkan Lebih
-
               </button>
-
             </div>
 
+            <!-- Comments Section -->
+            <section class="comments-section" id="comments-section" aria-label="Diskusi Penonton">
+              <div class="comments-header">
+                <h3>
+                  <span>💬</span> Diskusi Penonton <span id="comments-badge" style="font-size:0.85rem;color:var(--clr-text-muted);font-weight:normal;">(0)</span>
+                </h3>
+                <span style="font-size:0.75rem;color:var(--clr-secondary);font-weight:600;">🔥 Komunitas Otakux</span>
+              </div>
 
+              <!-- Input Komentar -->
+              <div class="comment-input-card">
+                <div class="comment-input-top">
+                  <div class="comment-avatar" id="my-avatar" style="background:#7c3aed;">O</div>
+                  <input type="text" id="comment-username" class="comment-name-input" placeholder="Nama Anda (opsional, contoh: Otaku Fans)" maxlength="30">
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <button type="button" class="btn-tag-timestamp" onclick="insertCurrentVideoTime()" title="Sematkan menit video saat ini ke komentar">
+                    <span>⏱️</span> <span>Sematkan Detik Ini</span>
+                  </button>
+                  <span style="font-size:0.75rem;color:var(--clr-text-muted);">Klik menit di komentar untuk melompat video</span>
+                </div>
+                <textarea id="comment-content" class="comment-textarea" placeholder="Tulis pendapat atau teorimu tentang anime/episode ini..."></textarea>
+                <div class="comment-submit-row">
+                  <button type="button" class="btn-submit-comment" onclick="submitNewComment()">
+                    <span>🚀 Kirim Komentar</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Daftar Komentar -->
+              <div class="comments-list" id="comments-list">
+                <div style="text-align:center;padding:20px;color:var(--clr-text-muted);font-size:0.85rem;">
+                  Memuat komentar...
+                </div>
+              </div>
+            </section>
 
           </div>
-
         </div>
 
 
@@ -454,13 +807,6 @@
        FOOTER
 
        ============================================= -->
-  <!-- Tombol Tonton Resmi Crunchyroll -->
-  <div class="official-watch-container" style="margin: 20px 0;">
-    <a id="btnCrunchyroll" href="https://www.crunchyroll.com" target="_blank" rel="noopener noreferrer"
-      style="display: inline-flex; align-items: center; gap: 8px; background-color: #f47521; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 15px;">
-      <span>Tonton Resmi di Crunchyroll &rarr;</span>
-    </a>
-  </div>
   <footer class="footer" role="contentinfo">
 
     <div class="container">
@@ -471,11 +817,11 @@
 
           <div class="logo-icon">▶</div>
 
-          <span class="text-gradient">AnimeStream</span>
+          <span class="text-gradient">Otakux</span>
 
         </a>
 
-        <span style="font-size:.8rem;color:var(--clr-text-muted)">© 2024 AnimeStream. Untuk tujuan edukasi.</span>
+        <span style="font-size:.8rem;color:var(--clr-text-muted)">© 2026 Otakux. Untuk tujuan edukasi.</span>
 
       </div>
 
@@ -498,9 +844,9 @@
     // Expose imgFallback globally untuk digunakan di inline onerror
 
     function imgFallback(el) {
-
-      el.src = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='50'><rect fill='%231c1c2e' width='80' height='50'/><text x='50%25' y='50%25' font-family='sans-serif' font-size='10' fill='%236b6b8a' text-anchor='middle' dy='.3em'>No Img</text></svg>";
-
+      if (el.dataset.fallbackApplied) return;
+      el.dataset.fallbackApplied = "true";
+      el.src = "icons/default_poster.svg";
     }
 
 
@@ -515,7 +861,7 @@
 
       if (animeEl) {
 
-        animeEl.innerHTML = `<a href="player.html?slug=${animeSlug}&ep=1">${animeTitle}</a>`;
+        animeEl.innerHTML = `<a href="detail.html?slug=${animeSlug}">${animeTitle}</a>`;
 
       }
 
@@ -525,21 +871,38 @@
 
   </script>
 
-  <script src="js/player.js"></script>
-
-
+  <script src="js/auth.js?v=23"></script>
+  <script src="js/features.js?v=1"></script>
+  <script src="js/player.js?v=45"></script>
 
   <script>
-
     // Hook breadcrumb update setelah player load
-
     const originalLoadEpisode = window.loadEpisode;
-
-    // Breadcrumb diperbarui dari dalam player.js via window.updateBreadcrumb
-
   </script>
 
-
+  <!-- Floating Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Navigasi Bawah">
+    <a href="index.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="genre.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+      <span>Genre</span>
+    </a>
+    <a href="schedule.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      <span>Jadwal</span>
+    </a>
+    <a href="search.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Cari</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item" id="bottom-nav-profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profil</span>
+    </a>
+  </nav>
 
 </body>
 

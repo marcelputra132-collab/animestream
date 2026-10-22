@@ -3,30 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AnimeStream — Nonton anime sub indo gratis, streaming online kualitas HD. Update terbaru setiap hari!">
+  <meta name="description" content="Otakux — Nonton anime sub indo gratis, streaming online kualitas HD. Update terbaru setiap hari!">
   <meta name="theme-color" content="#0d0d14">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="AnimeStream — Nonton Anime Online">
+  <meta property="og:title" content="Otakux — Nonton Anime Online">
   <meta property="og:description" content="Platform streaming anime terlengkap dengan update harian.">
   <meta property="og:type" content="website">
 
-  <title>AnimeStream — Nonton Anime Online Gratis</title>
+  <title>Otakux — Nonton Anime Online Gratis</title>
 
   <!-- PWA Manifest & App Icons -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <meta name="theme-color" content="#6c5ce7">
+  <link rel="manifest" href="manifest.json?v=otakux_v4">
+  <link rel="icon" type="image/png" href="icons/icon-192.png?v=x_v4">
+  <link rel="apple-touch-icon" href="icons/icon-512.png?v=x_v4">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="AnimeStream">
+  <meta name="apple-mobile-web-app-title" content="Otakux">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
+
+  <!-- =============================================
+       CINEMATIC APP ENTRANCE SPLASH SCREEN
+       ============================================= -->
+  <div id="app-splash-screen" onclick="dismissSplash()" title="Ketuk untuk masuk langsung">
+    <div class="splash-content">
+      <div class="splash-mascot-container">
+        <div class="splash-mascot-glow"></div>
+        <picture>
+          <source srcset="icons/splash_waifu_transparent.webp?v=cute2" type="image/webp">
+          <img src="icons/splash_waifu_transparent.png?v=cute2" alt="Otakux Kawaii Mascot" class="splash-mascot-img" decoding="async">
+        </picture>
+      </div>
+      <div class="splash-title">Otakux</div>
+      <div class="splash-tagline">✨ Nonton Anime Sub Indo Terlengkap Full HD</div>
+      <div class="splash-loader-bar">
+        <div class="splash-loader-fill"></div>
+      </div>
+      <div class="splash-tap-hint">Ketuk layar untuk langsung masuk &rarr;</div>
+    </div>
+  </div>
 
   <!-- =============================================
        NAVBAR
@@ -35,9 +55,9 @@
     <div class="container navbar-inner">
 
       <!-- Logo -->
-      <a href="index.html" class="navbar-logo" id="navbar-logo" aria-label="AnimeStream Beranda">
-        <div class="logo-icon">▶</div>
-        <span class="text-gradient">AnimeStream</span>
+      <a href="index.html" class="navbar-logo" id="navbar-logo" aria-label="Otakux Beranda">
+        <img src="icons/splash_waifu_transparent.png" alt="Otakux Logo" class="navbar-logo-img">
+        <span class="text-gradient">Otakux</span>
       </a>
 
       <!-- Search Bar -->
@@ -59,7 +79,8 @@
       <nav class="navbar-nav" id="main-nav" aria-label="Menu utama">
         <a href="index.html" class="active" id="nav-home">Beranda</a>
         <a href="search.html" id="nav-search">Daftar Anime</a>
-        <a href="#" id="nav-genre">Genre</a>
+        <a href="genre.html" id="nav-genre">Genre</a>
+        <a href="schedule.html" id="nav-schedule">Jadwal</a>
         <button id="btn-open-hp" type="button" onclick="openHpModal()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(108,92,231,0.15);color:#a29bfe;border:1px solid rgba(108,92,231,0.4);padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all 0.2s ease;">
           📱 Buka di HP
         </button>
@@ -68,8 +89,9 @@
         </button>
       </nav>
 
-      <!-- Refresh HP & Hamburger -->
+      <!-- User Slot, Refresh HP & Hamburger -->
       <div style="display:flex;align-items:center;gap:6px;">
+        <div class="nav-user-slot"></div>
         <button onclick="location.reload()" class="btn-top-refresh" aria-label="Segarkan Halaman" title="Refresh">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
@@ -111,28 +133,70 @@
 
     <!-- ── Banner Info Koleksi Besar ── -->
     <div class="container" style="margin-top:14px;">
-      <div style="background:linear-gradient(135deg, rgba(124,58,237,0.18), rgba(6,182,212,0.12));border:1px solid rgba(124,58,237,0.35);border-radius:14px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,0.25);">
+      <div style="background:linear-gradient(135deg, rgba(124,58,237,0.18), rgba(6,182,212,0.12));border:1px solid rgba(124,58,237,0.35);border-radius:14px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,0.25);flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#e8e8f0;">
           <span style="font-size:1.1rem;">🔥</span>
           <span><b id="total-playable-text">1.320+ Judul Anime</b> Siap Tonton Tanpa Eror</span>
         </div>
-        <a href="search.html" style="background:var(--grad-purple);color:#fff;padding:5px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;white-space:nowrap;box-shadow:0 2px 10px rgba(124,58,237,0.3);">
-          Lihat Semua ➔
-        </a>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button type="button" class="btn-gacha-glow" onclick="openGachaModal()" title="Bingung mau nonton apa? Acak anime seru!">
+            <span>🎲 Acak Anime</span>
+          </button>
+          <a href="search.html" style="background:var(--grad-purple);color:#fff;padding:6px 14px;border-radius:12px;font-size:0.75rem;font-weight:700;white-space:nowrap;box-shadow:0 2px 10px rgba(124,58,237,0.3);">
+            Lihat Semua ➔
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- ── Anime Populer & Rating Tertinggi ── -->
+    <!-- ── Terakhir Ditonton (Scroll ke Samping) ── -->
+    <section class="section continue-watching-section" id="continue-watching-section" style="display:none;" aria-labelledby="continue-watching-heading">
+      <div class="container">
+        <div class="continue-watching-header">
+          <h2 class="continue-watching-heading" id="continue-watching-heading">Terakhir Ditonton</h2>
+          <a href="profile.html" class="continue-watching-more">Lihat Lainnya &gt;</a>
+        </div>
+        <div class="continue-watching-row" id="continue-watching-list">
+          <!-- Diisi otomatis oleh JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Ongoing Update (Episode Terbaru) ── -->
+    <section class="section" aria-labelledby="latest-episodes-heading">
+      <div class="container">
+        <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <h2 class="section-title" id="latest-episodes-heading" style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.35rem;line-height:1;">⚡</span>
+            <span><strong style="color:#fff;font-weight:800;">Ongoing</strong> <span style="font-weight:400;color:#e2e8f0;">Update</span></span>
+          </h2>
+          <a href="schedule.html" class="section-link" aria-label="Lihat jadwal rilis anime" style="color:#38bdf8;font-weight:700;display:inline-flex;align-items:center;gap:4px;font-size:0.85rem;">
+            Lihat Jadwal &gt;
+          </a>
+        </div>
+
+
+        <div class="episode-list-grid" id="latest-episodes-list" role="list" aria-label="Episode terbaru">
+          <div class="spinner" style="margin:32px auto"></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ── HOT ANIME (Peringkat Anime Baru & Trending Populer) ── -->
     <section class="section" aria-labelledby="popular-anime-heading">
       <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" id="popular-anime-heading">
-            <div class="icon" aria-hidden="true">⭐</div>
-            Populer & Rating Tertinggi
+        <div class="section-header" style="flex-wrap:wrap;gap:10px;">
+          <h2 class="section-title" id="popular-anime-heading" style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.35rem;line-height:1;">🔥</span>
+            <span><strong style="color:#fff;font-weight:800;">Hot</strong> <span style="font-weight:400;color:#e2e8f0;">Anime</span></span>
           </h2>
-          <a href="search.html" class="section-link" aria-label="Lihat anime populer">Lihat Semua →</a>
+          <a href="search.html" class="section-link" aria-label="Lihat peringkat anime" style="color:#38bdf8;font-weight:700;display:inline-flex;align-items:center;gap:4px;font-size:0.85rem;">
+            Lihat Peringkat Anime &gt;
+          </a>
         </div>
-        <div class="anime-grid" id="popular-anime-grid" role="list" aria-label="Daftar anime populer">
+        <div class="hot-anime-showcase" id="popular-anime-grid" role="list" aria-label="Daftar hot anime">
           <!-- Diisi oleh JavaScript -->
         </div>
       </div>
@@ -174,23 +238,6 @@
       </div>
     </section>
 
-    <hr class="divider">
-
-    <!-- ── Episode Terbaru ── -->
-    <section class="section" aria-labelledby="latest-episodes-heading">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title" id="latest-episodes-heading">
-            <div class="icon" aria-hidden="true">⚡</div>
-            Update Episode Terbaru
-          </h2>
-        </div>
-        <div class="episode-list-grid" id="latest-episodes-list" role="list" aria-label="Episode terbaru">
-          <div class="spinner" style="margin:32px auto"></div>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <!-- =============================================
@@ -202,7 +249,7 @@
         <div class="footer-brand">
           <a href="index.html" class="navbar-logo" style="margin-bottom:12px;display:inline-flex">
             <div class="logo-icon">▶</div>
-            <span class="text-gradient">AnimeStream</span>
+            <span class="text-gradient">Otakux</span>
           </a>
           <p class="footer-desc">
             Platform streaming anime modern dengan koleksi terlengkap.
@@ -232,7 +279,7 @@
       </div>
 
       <div class="footer-bottom">
-        <span>© 2024 AnimeStream. Dibuat untuk tujuan edukasi.</span>
+        <span>© 2026 Otakux. Dibuat untuk tujuan edukasi.</span>
         <span>Made with ❤️ using Python + Vanilla JS</span>
       </div>
     </div>
@@ -242,7 +289,9 @@
   <div class="toast" id="toast" role="alert" aria-live="polite"></div>
 
   <!-- JavaScript -->
-  <script src="js/main.js"></script>
+  <script src="js/auth.js?v=23"></script>
+  <script src="js/features.js?v=1"></script>
+  <script src="js/main.js?v=23"></script>
 
   <!-- PWA Service Worker & Install Prompt -->
   <script>
@@ -283,7 +332,7 @@
     window.addEventListener('appinstalled', () => {
       if (installBtn) installBtn.style.display = 'none';
       if (typeof showToast === 'function') {
-        showToast('🎉 Aplikasi AnimeStream berhasil dipasang!');
+        showToast('🎉 Aplikasi Otakux berhasil dipasang!');
       }
     });
 
@@ -305,8 +354,8 @@
           try {
             const res = await fetch('/api/server-info');
             const resJson = await res.json();
-            if (resJson && resJson.data && resJson.data.lan_url) {
-              linkSpan.textContent = resJson.data.lan_url;
+            if (resJson && resJson.data) {
+              linkSpan.textContent = resJson.data.ngrok_url || resJson.data.lan_url || `http://${window.location.host}`;
             }
           } catch (e) {
             linkSpan.textContent = `http://${window.location.host}`;
@@ -333,6 +382,20 @@
         });
       }
     }
+    function dismissSplash() {
+      const splash = document.getElementById('app-splash-screen');
+      if (splash && !splash.classList.contains('fade-out')) {
+        splash.classList.add('fade-out');
+        setTimeout(() => {
+          if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+        }, 550);
+      }
+    }
+
+    // Auto-dismiss splash screen smoothly
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(dismissSplash, 1800);
+    });
   </script>
 
   <!-- Modal Buka di HP -->
@@ -340,7 +403,7 @@
     <div style="background:#13151f;border:1px solid var(--clr-primary);border-radius:18px;max-width:390px;width:100%;padding:26px 20px;box-shadow:0 12px 40px rgba(0,0,0,0.9);text-align:center;position:relative;">
       <button onclick="closeHpModal()" type="button" style="position:absolute;top:12px;right:14px;background:transparent;border:none;color:#8a8aa0;font-size:1.4rem;cursor:pointer;line-height:1;">✕</button>
       <h3 style="color:#fff;font-size:1.25rem;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px;">
-        <span>📱</span> <span>Buka AnimeStream di HP</span>
+        <span>📱</span> <span>Buka Otakux di HP</span>
       </h3>
       <p style="color:var(--clr-text-muted);font-size:0.83rem;margin-bottom:16px;">
         Pastikan HP dan Komputer terhubung ke <b>WiFi yang sama</b>, lalu scan QR Code ini:
@@ -368,19 +431,48 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       <span>Beranda</span>
     </a>
+    <a href="genre.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+      <span>Genre</span>
+    </a>
+    <a href="schedule.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      <span>Jadwal</span>
+    </a>
     <a href="search.html" class="mobile-nav-item">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <span>Cari Anime</span>
+      <span>Cari</span>
     </a>
-    <a href="javascript:void(0)" onclick="location.reload()" class="mobile-nav-item" style="color:#a29bfe;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-      <span>Refresh 🔄</span>
-    </a>
-    <a href="javascript:void(0)" onclick="openHpModal()" class="mobile-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-      <span>Info Link</span>
+    <a href="profile.html" class="mobile-nav-item" id="bottom-nav-profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profil</span>
     </a>
   </nav>
+
+  <!-- Interactive Waifu Mascot Widget (Kawaii Assistant) -->
+  <div class="interactive-waifu-widget" id="waifu-assistant-widget">
+    <div class="waifu-bubble" id="waifu-speech-bubble" onclick="nextWaifuQuote()">
+      Konnichiwa, Senpai! Selamat datang di Otakux ✨
+    </div>
+    <button type="button" class="waifu-avatar-btn" onclick="nextWaifuQuote()" title="Ketuk untuk berbicara dengan waifu mascot">
+      <img src="icons/splash_waifu_transparent.png?v=cute2" alt="Otakux Waifu Mascot">
+    </button>
+  </div>
+
+  <!-- Modal Gacha Anime Acak (Surprise Me 🎲) -->
+  <div id="gacha-anime-modal" class="auth-modal-overlay" style="display:none;">
+    <div class="gacha-modal-card animate-pop">
+      <button type="button" class="auth-modal-close" style="color:#fff;" onclick="closeGachaModal()">&times;</button>
+      <div id="gacha-rolling-state" style="display:none;padding:30px 0;">
+        <div class="gacha-dice-anim">🎲</div>
+        <h3 style="font-size:1.15rem;margin-bottom:6px;">Mengacak dari 1.320+ Anime...</h3>
+        <p style="color:var(--text-muted);font-size:0.85rem;">Mencari judul terbaik untuk Senpai...</p>
+      </div>
+      <div id="gacha-result-state">
+        <!-- Diisi otomatis oleh JavaScript rollGachaAnime() -->
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

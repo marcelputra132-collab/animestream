@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d14">
+  <title>Detail Anime | Otakux</title>
+  <meta name="description" content="Informasi lengkap sinopsis, genre, alur cerita, dan daftar episode anime di Otakux.">
+
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json?v=otakux_v4">
+  <link rel="icon" type="image/png" href="icons/icon-192.png?v=x_v4">
+  <link rel="apple-touch-icon" href="icons/icon-512.png?v=x_v4">
+  <link rel="stylesheet" href="css/style.css?v=19">
+
+  <style>
+    /* ── DETAIL PAGE CUSTOM STYLES ── */
+    .detail-hero-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 480px;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .detail-backdrop-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(28px) brightness(0.28) saturate(1.8);
+      transform: scale(1.15);
+    }
+
+    .detail-backdrop-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(13, 13, 20, 0.4) 0%, rgba(13, 13, 20, 0.85) 65%, #0d0d14 100%);
+    }
+
+    .detail-wrapper {
+      position: relative;
+      z-index: 1;
+      padding-top: 30px;
+      padding-bottom: 60px;
+    }
+
+    .detail-header-card {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      margin-bottom: 36px;
+    }
+
+    .detail-poster-wrap {
+      flex-shrink: 0;
+      width: 230px;
+      aspect-ratio: 2/3;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(124, 58, 237, 0.35);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+    }
+
+    .detail-poster-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .detail-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      color: #fff;
+      word-break: break-word;
+    }
+
+    .detail-meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .badge-gold {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-purple {
+      background: rgba(124, 58, 237, 0.2);
+      color: #a78bfa;
+      border: 1px solid rgba(124, 58, 237, 0.4);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .badge-cyan {
+      background: rgba(6, 182, 212, 0.2);
+      color: #67e8f9;
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    /* Genre Tags */
+    .detail-genres {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .genre-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--clr-text-dim);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .genre-chip:hover {
+      background: rgba(124, 58, 237, 0.3);
+      border-color: rgba(124, 58, 237, 0.6);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Actions CTA */
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .btn-play-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+      color: #fff;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.5);
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-play-primary:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 30px rgba(6, 182, 212, 0.65);
+    }
+
+    .btn-action-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-action-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .btn-action-secondary.liked {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.6);
+      color: #f87171;
+    }
+
+    .btn-action-secondary.favorited {
+      background: rgba(234, 179, 8, 0.2);
+      border-color: rgba(234, 179, 8, 0.6);
+      color: #fde047;
+    }
+
+    /* Synopsis Card */
+    .synopsis-card {
+      background: rgba(19, 21, 31, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 36px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .synopsis-heading {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .synopsis-body {
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: #cbd5e1;
+      white-space: pre-line;
+    }
+
+    /* Episodes Section */
+    .episodes-section {
+      margin-bottom: 40px;
+    }
+
+    .episodes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .episodes-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .episode-grid-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .ep-card-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-decoration: none;
+      color: #fff;
+      transition: all 0.25s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ep-card-item:hover {
+      background: rgba(124, 58, 237, 0.25);
+      border-color: rgba(167, 139, 250, 0.6);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(124, 58, 237, 0.35);
+    }
+
+    .ep-card-num {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #67e8f9;
+      margin-bottom: 4px;
+    }
+
+    .ep-card-title {
+      font-size: 0.74rem;
+      color: var(--clr-text-muted);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+    .ep-card-play-icon {
+      font-size: 0.75rem;
+      color: #a78bfa;
+      margin-top: 4px;
+    }
+
+    /* Responsive Mobile */
+    @media (max-width: 768px) {
+      .detail-header-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+      }
+      .detail-poster-wrap {
+        width: 170px;
+      }
+      .detail-meta-badges {
+        justify-content: center;
+      }
+      .detail-genres {
+        justify-content: center;
+      }
+      .detail-actions {
+        justify-content: center;
+        width: 100%;
+      }
+      .btn-play-primary, .btn-action-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+      .synopsis-card {
+        padding: 18px 14px;
+      }
+      .episode-grid-picker {
+        grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+        gap: 8px;
+      }
+      .ep-card-item {
+        padding: 10px 6px;
+      }
+      .ep-card-num {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Navigasi Utama">
+    <div class="container navbar-inner">
+      <a href="index.html" class="navbar-logo" aria-label="Otakux Beranda">
+        <img src="icons/splash_waifu_transparent.png" alt="Otakux Logo" class="navbar-logo-img">
+        <span class="text-gradient">Otakux</span>
+      </a>
+
+      <div class="search-bar" role="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" class="search-input" id="navbar-search" placeholder="Cari anime..." autocomplete="off">
+      </div>
+
+      <nav class="navbar-nav" id="main-nav">
+        <a href="index.html">Beranda</a>
+        <a href="search.html">Daftar Anime</a>
+        <a href="genre.html">Genre</a>
+        <a href="schedule.html">Jadwal</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="nav-user-slot"></div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Buka menu">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BACKGROUND BLUR HERO -->
+  <div class="detail-hero-backdrop">
+    <img id="backdrop-img" src="" alt="Backdrop" class="detail-backdrop-img">
+    <div class="detail-backdrop-gradient"></div>
+  </div>
+
+  <!-- MAIN DETAIL CONTENT -->
+  <main class="detail-wrapper">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" style="margin-bottom: 20px;">
+        <a href="index.html">Beranda</a>
+        <span class="sep">›</span>
+        <span id="breadcrumb-title">Detail Anime</span>
+      </nav>
+
+      <!-- Loading Spinner -->
+      <div id="detail-loader" style="text-align:center; padding: 60px 0;">
+        <div class="spinner" style="margin: 0 auto 16px;"></div>
+        <p style="color: var(--clr-text-muted);">Memuat informasi anime...</p>
+      </div>
+
+      <!-- Detail Header Card -->
+      <div id="detail-content" style="display:none;">
+        <div class="detail-header-card animate-fade-up">
+          <div class="detail-poster-wrap">
+            <img id="detail-poster" src="" alt="Anime Poster" class="detail-poster-img" onerror="imgFallback(this)">
+          </div>
+
+          <div class="detail-info">
+            <h1 id="detail-title" class="detail-title">Nama Anime</h1>
+
+            <div class="detail-meta-badges">
+              <span id="badge-score" class="badge-gold">⭐ 0.0</span>
+              <span id="badge-status" class="badge-purple">Ongoing</span>
+              <span id="badge-schedule-time" class="badge-cyan" style="display:none;background:rgba(6,182,212,0.18);border:1px solid rgba(6,182,212,0.55);color:#38bdf8;font-weight:700;">⏰ Jam Tayang</span>
+              <span id="badge-ep-count" class="badge-cyan">0 Episode</span>
+              <span id="badge-views" class="badge-gold" style="background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:#60a5fa;display:none;">👁️ 0 Dilihat</span>
+            </div>
+
+            <!-- Genre List -->
+            <div id="detail-genres" class="detail-genres">
+              <!-- Diisi oleh JS -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="detail-actions">
+              <a id="btn-watch-ep1" href="#" class="btn-play-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <span>Mulai Nonton Episode 1</span>
+              </a>
+              <button type="button" id="btn-like-detail" onclick="toggleDetailLike()" class="btn-action-secondary">
+                <span>❤️</span> <span id="detail-like-count">Suka (0)</span>
+              </button>
+              <button type="button" id="btn-fav-detail" onclick="toggleDetailFav()" class="btn-action-secondary">
+                <span>⭐</span> <span id="detail-fav-label">Favorit</span>
+              </button>
+              <div class="watchlist-dropdown-wrap" style="position:relative;display:inline-block;">
+                <button type="button" id="btn-watchlist-detail" onclick="toggleWatchlistMenu()" class="btn-action-secondary">
+                  <span id="detail-watchlist-icon">📋</span> <span id="detail-watchlist-label">Status Nonton</span>
+                </button>
+                <div id="watchlist-dropdown-menu" style="display:none;position:absolute;top:110%;left:0;background:rgba(19,21,31,0.98);border:1px solid rgba(124,58,237,0.4);border-radius:12px;padding:6px;box-shadow:0 8px 30px rgba(0,0,0,0.8);z-index:99;min-width:180px;backdrop-filter:blur(14px);">
+                  <button type="button" class="watchlist-opt-btn" onclick="setAnimeWatchlistStatus('watching')">👁️ Sedang Ditonton</button>
+                  <button type="button" class="watchlist-opt-btn" onclick="setAnimeWatchlistStatus('plan')">📋 Rencana Nonton</button>
+                  <button type="button" class="watchlist-opt-btn" onclick="setAnimeWatchlistStatus('completed')">✅ Sudah Selesai</button>
+                  <button type="button" class="watchlist-opt-btn" style="color:#ef4444;" onclick="setAnimeWatchlistStatus('none')">🗑️ Hapus dari Daftar</button>
+                </div>
+              </div>
+              <a href="#episodes-section" class="btn-action-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                <span>Daftar Episode</span>
+              </a>
+              <button type="button" onclick="shareAnimeLink()" class="btn-action-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                <span>Bagikan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sinopsis & Alur Cerita -->
+        <section class="synopsis-card animate-fade-up">
+          <h2 class="synopsis-heading">
+            <span>📖 Sinopsis & Alur Cerita</span>
+          </h2>
+          <p id="detail-synopsis" class="synopsis-body">
+            Memuat alur cerita...
+          </p>
+        </section>
+
+        <!-- Daftar Episode Lengkap -->
+        <section id="episodes-section" class="episodes-section animate-fade-up">
+          <div class="episodes-header">
+            <h2 class="episodes-title">
+              <span>📺 Pilih Episode untuk Ditonton</span>
+            </h2>
+            <span id="total-eps-label" style="font-size:0.85rem; color:var(--clr-text-muted);">0 Episode</span>
+          </div>
+
+          <div id="episodes-grid" class="episode-grid-picker">
+            <!-- Diisi oleh JS -->
+          </div>
+        </section>
+
+        <!-- Diskusi & Komentar Komunitas -->
+        <section class="comments-section animate-fade-up" id="comments-section" style="margin-top:24px;">
+          <div class="comments-header">
+            <h3>
+              <span>💬</span> Diskusi Penonton <span id="comments-badge" style="font-size:0.85rem;color:var(--clr-text-muted);font-weight:normal;">(0)</span>
+            </h3>
+            <span style="font-size:0.75rem;color:var(--clr-secondary);font-weight:600;">🔥 Komunitas Otakux</span>
+          </div>
+
+          <div class="comment-input-card">
+            <div class="comment-input-top">
+              <div class="comment-avatar" style="background:#7c3aed;">O</div>
+              <input type="text" id="detail-comment-user" class="comment-name-input" placeholder="Nama Anda (opsional, contoh: Otaku Fans)" maxlength="30">
+            </div>
+            <textarea id="detail-comment-content" class="comment-textarea" placeholder="Tulis pendapat atau teorimu tentang anime ini..."></textarea>
+            <div class="comment-submit-row">
+              <button type="button" class="btn-submit-comment" onclick="submitDetailComment()">
+                <span>🚀 Kirim Komentar</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="comments-list" id="detail-comments-list">
+            <div style="text-align:center;padding:20px;color:var(--clr-text-muted);font-size:0.85rem;">
+              Memuat komentar...
+            </div>
+          </div>
+        </section>
+
+        <!-- Rekomendasi Anime Serupa -->
+        <section class="section animate-fade-up" style="padding-top: 20px;">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="icon">✨</span>
+              <span>Anime Terkait & Rekomendasi</span>
+            </h2>
+          </div>
+          <div id="related-anime-grid" class="anime-grid">
+            <!-- Diisi oleh JS -->
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav" aria-label="Navigasi Bawah">
+    <a href="index.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>Beranda</span>
+    </a>
+    <a href="genre.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+      <span>Genre</span>
+    </a>
+    <a href="schedule.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      <span>Jadwal</span>
+    </a>
+    <a href="search.html" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <span>Cari</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item" id="bottom-nav-profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profil</span>
+    </a>
+  </nav>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast" role="alert"></div>
+
+  <!-- SCRIPT -->
+  <script src="js/auth.js?v=23"></script>
+  <script src="js/features.js?v=1"></script>
+  <script>
+    const API_BASE = window.location.origin && window.location.origin.startsWith("http")
+      ? window.location.origin
+      : "http://localhost:5000";
+
+    let currentSlug = "";
+    let detailStats = { views: 0, likes: 0 };
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    function imgFallback(el) {
+      if (el.dataset.fallbackApplied) return;
+      el.dataset.fallbackApplied = "true";
+      el.src = "icons/default_poster.svg";
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatCommentTime(dateStr) {
+      if (!dateStr) return "Baru saja";
+      try {
+        const d = new Date(dateStr);
+        const now = new Date();
+        const diffSec = Math.floor((now - d) / 1000);
+        if (diffSec < 60) return "Baru saja";
+        if (diffSec < 3600) return `${Math.floor(diffSec / 60)} mnt lalu`;
+        if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} jam lalu`;
+        return `${Math.floor(diffSec / 86400)} hari lalu`;
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    function shareAnimeLink() {
+      const title = document.getElementById("detail-title")?.textContent || "Anime";
+      const shareData = {
+        title: `${title} | Otakux`,
+        text: `Nonton anime ${title} gratis subtitle Indonesia di Otakux!`,
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast("📋 Link anime berhasil disalin!");
+        }).catch(() => {
+          showToast("Gagal menyalin link.");
+        });
+      }
+    }
+
+    // --- LIKE & FAVORIT ---
+    function updateDetailLikeUI(isLiked, count) {
+      const btn = document.getElementById("btn-like-detail");
+      const countEl = document.getElementById("detail-like-count");
+      if (!btn || !countEl) return;
+      if (isLiked) {
+        btn.classList.add("liked");
+        countEl.textContent = `Disukai (${count || 0})`;
+      } else {
+        btn.classList.remove("liked");
+        countEl.textContent = `Suka (${count || 0})`;
+      }
+    }
+
+    function updateDetailFavUI(isFav) {
+      const btn = document.getElementById("btn-fav-detail");
+      const labelEl = document.getElementById("detail-fav-label");
+      if (!btn || !labelEl) return;
+      if (isFav) {
+        btn.classList.add("favorited");
+        labelEl.textContent = "Tersimpan";
+      } else {
+        btn.classList.remove("favorited");
+        labelEl.textContent = "Favorit";
+      }
+    }
+
+    function toggleWatchlistMenu() {
+      const menu = document.getElementById("watchlist-dropdown-menu");
+      if (menu) menu.style.display = menu.style.display === "none" ? "block" : "none";
+    }
+
+    function setAnimeWatchlistStatus(status) {
+      if (!currentSlug) return;
+      let watchlist = JSON.parse(localStorage.getItem("otakux_watchlist") || "{}");
+      if (status === 'none') {
+        delete watchlist[currentSlug];
+        showToast("🗑️ Dihapus dari Watchlist");
+      } else {
+        const titleEl = document.getElementById("detail-title");
+        const posterEl = document.getElementById("detail-poster");
+        watchlist[currentSlug] = {
+          slug: currentSlug,
+          title: titleEl ? titleEl.textContent : currentSlug,
+          poster: posterEl ? posterEl.src : '',
+          status: status,
+          updated_at: new Date().toISOString()
+        };
+        const label = status === 'watching' ? 'Sedang Ditonton 👁️' :
+                      status === 'plan' ? 'Rencana Nonton 📋' : 'Sudah Selesai ✅';
+        showToast(`✅ Ditambahkan ke ${label}`);
+      }
+      localStorage.setItem("otakux_watchlist", JSON.stringify(watchlist));
+      updateWatchlistUI(status);
+      const menu = document.getElementById("watchlist-dropdown-menu");
+      if (menu) menu.style.display = "none";
+    }
+
+    function updateWatchlistUI(status) {
+      const icon = document.getElementById("detail-watchlist-icon");
+      const label = document.getElementById("detail-watchlist-label");
+      if (!icon || !label) return;
+      if (status === 'watching') {
+        icon.textContent = "👁️";
+        label.textContent = "Sedang Ditonton";
+      } else if (status === 'plan') {
+        icon.textContent = "📋";
+        label.textContent = "Rencana Nonton";
+      } else if (status === 'completed') {
+        icon.textContent = "✅";
+        label.textContent = "Sudah Selesai";
+      } else {
+        icon.textContent = "📋";
+        label.textContent = "Status Nonton";
+      }
+    }
+
+    async function loadDetailStats(slug) {
+      if (!slug) return;
+      const isLiked = localStorage.getItem(`otakux_liked_${slug}`) === "1";
+      const favList = JSON.parse(localStorage.getItem("otakux_bookmarks") || "[]");
+      updateDetailFavUI(favList.includes(slug));
+
+      const watchlist = JSON.parse(localStorage.getItem("otakux_watchlist") || "{}");
+      const savedStatus = watchlist[slug] ? watchlist[slug].status : 'none';
+      updateWatchlistUI(savedStatus);
+
+      try {
+        const res = await fetch(`${API_BASE}/api/animes/${encodeURIComponent(slug)}/stats`, {
+          headers: { "ngrok-skip-browser-warning": "true" }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          detailStats = json.data || { views: 0, likes: 0 };
+        }
+      } catch (e) {
+        console.warn("Gagal load stats:", e);
+      }
+
+      updateDetailLikeUI(isLiked, detailStats.likes);
+      const viewsBadge = document.getElementById("badge-views");
+      if (viewsBadge) {
+        viewsBadge.textContent = `👁️ ${detailStats.views || 0} Dilihat`;
+        viewsBadge.style.display = "inline-flex";
+      }
+    }
+
+    async function toggleDetailLike() {
+      if (!currentSlug) return;
+      const likedKey = `otakux_liked_${currentSlug}`;
+      const wasLiked = localStorage.getItem(likedKey) === "1";
+      const nowLiked = !wasLiked;
+
+      localStorage.setItem(likedKey, nowLiked ? "1" : "0");
+      const delta = nowLiked ? 1 : -1;
+      detailStats.likes = Math.max(0, (detailStats.likes || 0) + delta);
+      updateDetailLikeUI(nowLiked, detailStats.likes);
+
+      showToast(nowLiked ? "❤️ Anda menyukai anime ini!" : "Batal menyukai anime ini.");
+
+      try {
+        const res = await fetch(`${API_BASE}/api/animes/${encodeURIComponent(currentSlug)}/like`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
+          body: JSON.stringify({ is_like: nowLiked })
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data && json.data.likes !== undefined) {
+            detailStats.likes = json.data.likes;
+            updateDetailLikeUI(nowLiked, detailStats.likes);
+          }
+        }
+      } catch (e) {
+        console.warn("Gagal kirim like:", e);
+      }
+    }
+
+    function toggleWatchlistMenu() {
+      const menu = document.getElementById("watchlist-dropdown-menu");
+      if (menu) {
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      const wrap = document.querySelector(".watchlist-dropdown-wrap");
+      const menu = document.getElementById("watchlist-dropdown-menu");
+      if (wrap && menu && !wrap.contains(e.target)) {
+        menu.style.display = "none";
+      }
+    });
+
+    async function setAnimeWatchlistStatus(status) {
+      const menu = document.getElementById("watchlist-dropdown-menu");
+      if (menu) menu.style.display = "none";
+
+      const title = document.getElementById("detail-title")?.textContent || currentSlug;
+      const poster = document.getElementById("detail-poster")?.src || "icons/default_poster.svg";
+      const animeData = {
+        slug: currentSlug,
+        title: title,
+        thumbnail: poster
+      };
+
+      if (typeof OtakuWatchlist !== "undefined") {
+        await OtakuWatchlist.set(animeData, status);
+      }
+      updateDetailWatchlistUI();
+    }
+
+    function toggleDetailFav() {
+      if (!currentSlug) return;
+      const title = document.getElementById("detail-title")?.textContent || currentSlug;
+      const poster = document.getElementById("detail-poster")?.src || "icons/default_poster.svg";
+      const animeData = {
+        slug: currentSlug,
+        title: title,
+        thumbnail: poster
+      };
+
+      if (typeof OtakuWatchlist !== "undefined") {
+        OtakuWatchlist.toggleFavorite(animeData);
+      } else {
+        let favList = JSON.parse(localStorage.getItem("otakux_bookmarks") || "[]");
+        const idx = favList.indexOf(currentSlug);
+        let isNowFav = false;
+        if (idx > -1) {
+          favList.splice(idx, 1);
+        } else {
+          favList.push(currentSlug);
+          isNowFav = true;
+        }
+        localStorage.setItem("otakux_bookmarks", JSON.stringify(favList));
+        if (typeof showToast === "function") {
+          showToast(isNowFav ? "⭐ Ditambahkan ke Daftar Favorit!" : "Dihapus dari Daftar Favorit.");
+        }
+      }
+      updateDetailWatchlistUI();
+    }
+
+    function updateDetailWatchlistUI() {
+      if (!currentSlug) return;
+      const favBtn = document.getElementById("btn-fav-detail");
+      const favLabel = document.getElementById("detail-fav-label");
+      const wlBtn = document.getElementById("btn-watchlist-detail");
+      const wlIcon = document.getElementById("detail-watchlist-icon");
+      const wlLabel = document.getElementById("detail-watchlist-label");
+
+      let item = null;
+      if (typeof OtakuWatchlist !== "undefined") {
+        item = OtakuWatchlist.get(currentSlug);
+      } else {
+        const favList = JSON.parse(localStorage.getItem("otakux_bookmarks") || "[]");
+        if (favList.includes(currentSlug)) item = { status: "favorite" };
+      }
+
+      const isFav = item && item.status === "favorite";
+      if (favBtn) {
+        if (isFav) {
+          favBtn.classList.add("active-fav");
+          if (favLabel) favLabel.textContent = "⭐ Favorit";
+        } else {
+          favBtn.classList.remove("active-fav");
+          if (favLabel) favLabel.textContent = "Favorit";
+        }
+      }
+
+      if (wlBtn && wlLabel) {
+        if (!item || item.status === "none") {
+          wlLabel.textContent = "Status Nonton";
+          if (wlIcon) wlIcon.textContent = "📋";
+        } else if (item.status === "watching") {
+          wlLabel.textContent = "Sedang Ditonton";
+          if (wlIcon) wlIcon.textContent = "👁️";
+        } else if (item.status === "plan") {
+          wlLabel.textContent = "Rencana Nonton";
+          if (wlIcon) wlIcon.textContent = "📋";
+        } else if (item.status === "completed") {
+          wlLabel.textContent = "Sudah Selesai";
+          if (wlIcon) wlIcon.textContent = "✅";
+        }
+      }
+    }
+
+    // --- KOMENTAR ---
+    async function loadDetailComments(slug) {
+      const listEl = document.getElementById("detail-comments-list");
+      const badgeEl = document.getElementById("comments-badge");
+      if (!listEl) return;
+
+      const savedName = localStorage.getItem("otakux_username") || "";
+      const userInput = document.getElementById("detail-comment-user");
+      if (userInput && savedName) userInput.value = savedName;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/animes/${encodeURIComponent(slug)}/comments`, {
+          headers: { "ngrok-skip-browser-warning": "true" }
+        });
+        if (!res.ok) throw new Error("Gagal load komentar");
+        const json = await res.json();
+        const comments = json.data || [];
+
+        if (badgeEl) badgeEl.textContent = `(${comments.length})`;
+
+        if (comments.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align:center;padding:25px;color:var(--clr-text-muted);font-size:0.85rem;">
+              ✨ Belum ada komentar di anime ini. Jadilah yang pertama memberikan review!
+            </div>
+          `;
+          return;
+        }
+
+        listEl.innerHTML = comments.map(c => `
+          <div class="comment-item" id="comment-${c.id}">
+            <div class="comment-avatar" style="background:${c.avatar_color || '#7c3aed'};">
+              ${(c.username || 'O').charAt(0).toUpperCase()}
+            </div>
+            <div class="comment-body">
+              <div class="comment-meta">
+                <span class="comment-author">${escapeHtml(c.username || 'Otaku Fans')}</span>
+                ${c.ep_number ? `<span class="comment-ep-badge">Eps ${c.ep_number}</span>` : ''}
+                <span class="comment-time">${formatCommentTime(c.created_at)}</span>
+              </div>
+              <div class="comment-text">${typeof OtakuTimestamp !== "undefined" ? OtakuTimestamp.format(c.content) : escapeHtml(c.content)}</div>
+              <div class="comment-actions">
+                <button type="button" class="btn-like-comment" onclick="likeCommentItem(${c.id})">
+                  <span>👍</span> <span id="comment-like-${c.id}">${c.likes || 0}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join("");
+      } catch (e) {
+        listEl.innerHTML = `<div style="text-align:center;padding:20px;color:var(--clr-error);font-size:0.85rem;">Gagal memuat komentar.</div>`;
+      }
+    }
+
+    async function submitDetailComment() {
+      if (!currentSlug) return;
+      const userInput = document.getElementById("detail-comment-user");
+      const contentInput = document.getElementById("detail-comment-content");
+      if (!contentInput) return;
+
+      const content = contentInput.value.trim();
+      if (!content) {
+        showToast("⚠️ Tulis komentar terlebih dahulu!");
+        contentInput.focus();
+        return;
+      }
+
+      const username = (userInput && userInput.value.trim()) ? userInput.value.trim() : "Otaku Fans";
+      localStorage.setItem("otakux_username", username);
+
+      try {
+        const res = await fetch(`${API_BASE}/api/animes/${encodeURIComponent(currentSlug)}/comments`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
+          body: JSON.stringify({
+            username: username,
+            content: content
+          })
+        });
+        if (!res.ok) throw new Error("Gagal mengirim komentar");
+        contentInput.value = "";
+        showToast("🎉 Komentar berhasil diposting!");
+        await loadDetailComments(currentSlug);
+      } catch (e) {
+        showToast("Gagal mengirim: " + e.message);
+      }
+    }
+
+    async function likeCommentItem(commentId) {
+      const btn = document.getElementById(`comment-like-${commentId}`);
+      try {
+        const res = await fetch(`${API_BASE}/api/comments/${commentId}/like`, {
+          method: "POST",
+          headers: { "ngrok-skip-browser-warning": "true" }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (btn && json.data && json.data.likes !== undefined) {
+            btn.textContent = json.data.likes;
+          }
+        }
+      } catch (e) {}
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Menu toggle
+      const menuToggle = document.getElementById("menu-toggle");
+      const mainNav = document.getElementById("main-nav");
+      if (menuToggle && mainNav) {
+        menuToggle.addEventListener("click", () => mainNav.classList.toggle("open"));
+      }
+
+      // Search input
+      const searchInput = document.getElementById("navbar-search");
+      if (searchInput) {
+        searchInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && searchInput.value.trim()) {
+            window.location.href = `search.html?q=${encodeURIComponent(searchInput.value.trim())}`;
+          }
+        });
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get("slug");
+      currentSlug = slug;
+
+      if (!slug) {
+        document.getElementById("detail-loader").innerHTML = `
+          <p style="color:var(--clr-error)">Anime tidak ditemukan.</p>
+          <a href="index.html" class="btn btn-secondary" style="margin-top:16px;">← Kembali ke Beranda</a>
+        `;
+        return;
+      }
+
+      try {
+        let resAnime = await fetch(`${API_BASE}/api/animes/${encodeURIComponent(slug)}`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
+        if (!resAnime.ok) {
+          // Coba fallback cerdas jika slug tidak ditemukan: cari anime yang mirip
+          const query = slug.replace(/[-_]+/g, " ");
+          const resSearch = await fetch(`${API_BASE}/api/animes/search?q=${encodeURIComponent(query)}`, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          });
+          if (resSearch.ok) {
+            const jsonSearch = await resSearch.json();
+            const found = jsonSearch.data?.animes?.[0];
+            if (found && found.slug && found.slug !== slug) {
+              window.location.replace(`detail.html?slug=${encodeURIComponent(found.slug)}`);
+              return;
+            }
+          }
+          throw new Error("Gagal mengambil data anime");
+        }
+        const jsonAnime = await resAnime.json();
+        const anime = jsonAnime.data;
+
+        // Update Title & Meta
+        document.title = `${anime.title} — Sinopsis & Nonton | Otakux`;
+        document.getElementById("detail-title").textContent = anime.title;
+        document.getElementById("breadcrumb-title").textContent = anime.title;
+        document.getElementById("detail-poster").src = anime.thumbnail || "";
+        document.getElementById("backdrop-img").src = anime.thumbnail || "";
+
+        // Badges
+        const scoreBadge = document.getElementById("badge-score");
+        if (anime.score > 0) {
+          scoreBadge.textContent = `⭐ ${anime.score}`;
+        } else {
+          scoreBadge.textContent = "⭐ Rating Populer";
+        }
+
+        document.getElementById("badge-status").textContent = anime.status || "Ongoing";
+
+        const timeBadge = document.getElementById("badge-schedule-time");
+        if (timeBadge) {
+          if (anime.release_time) {
+            timeBadge.textContent = `⏰ Tayang: ${anime.release_time}`;
+            timeBadge.style.display = "inline-flex";
+          } else {
+            timeBadge.style.display = "none";
+          }
+        }
+
+        // Genres
+        const genresWrap = document.getElementById("detail-genres");
+        genresWrap.innerHTML = "";
+        const genreList = (anime.genre || "Action, Fantasy").split(",").map(g => g.trim()).filter(Boolean);
+        genreList.forEach(g => {
+          const a = document.createElement("a");
+          a.href = `genre.html?name=${encodeURIComponent(g)}`;
+          a.className = "genre-chip";
+          a.textContent = `# ${g}`;
+          genresWrap.appendChild(a);
+        });
+
+        // Synopsis
+        const synopsisEl = document.getElementById("detail-synopsis");
+        if (anime.synopsis && anime.synopsis.trim() && anime.synopsis !== "Tidak ada sinopsis.") {
+          synopsisEl.textContent = anime.synopsis;
+        } else {
+          synopsisEl.innerHTML = `Anime <b>${anime.title}</b> berkisah tentang petualangan seru dan menegangkan dalam dunia fantasi penuh tantangan. Saksikan perjuangan karakter utama menghadapi musuh-musuh tangguh dan perjalanan menggapai impian tertingginya!`;
+        }
+
+        // Fetch Episodes
+        const resEps = await fetch(`${API_BASE}/api/animes/${encodeURIComponent(slug)}/episodes`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
+        let episodes = [];
+        if (resEps.ok) {
+          const jsonEps = await resEps.json();
+          episodes = jsonEps.data?.episodes || [];
+        }
+
+        // Urutkan episode dari nomor 1 secara strictly ascending
+        episodes.sort((a, b) => a.ep_number - b.ep_number);
+
+        async function loadFranchiseAlternatives(anime) {
+          const container = document.getElementById("available-franchise-container");
+          if (!container) return;
+          try {
+            const rawTitle = anime.title || "";
+            const base = rawTitle.split(/[:\-\(]|Season|\bPart\b/i)[0].trim();
+            if (!base || base.length < 3) return;
+            const res = await fetch(`${API_BASE}/api/animes/search?q=${encodeURIComponent(base)}`, {
+              headers: { 'ngrok-skip-browser-warning': 'true' }
+            });
+            if (!res.ok) return;
+            const json = await res.json();
+            const hits = (json.data || []).filter(h => h.slug !== anime.slug && h.ep_count > 0);
+            if (hits.length > 0) {
+              container.innerHTML = `
+                <div style="font-size: 0.9rem; font-weight: 700; color: #a78bfa; margin-bottom: 12px; text-align: left;">
+                  📺 Musim ${escapeHtml(base)} yang Siap Ditonton Sekarang:
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; text-align: left;">
+                  ${hits.map(h => `
+                    <a href="detail.html?slug=${encodeURIComponent(h.slug)}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.06); border-radius: 8px; text-decoration: none; color: #fff; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                      <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">${escapeHtml(h.title)}</div>
+                        <div style="font-size: 0.78rem; color: #38bdf8;">🟢 ${h.ep_count} Episode Siap Nonton</div>
+                      </div>
+                      <span style="background: var(--clr-primary); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Lihat ›</span>
+                    </a>
+                  `).join("")}
+                </div>
+              `;
+            }
+          } catch (e) {
+            console.warn("Gagal load franchise alternatives:", e);
+          }
+        }
+
+        function updateEpisodesDisplay(epList) {
+          epList.sort((a, b) => a.ep_number - b.ep_number);
+          const total = epList.length;
+
+          if (total > 0) {
+            document.getElementById("badge-ep-count").textContent = `${total} Episode`;
+            document.getElementById("total-eps-label").textContent = `${total} Episode Tersedia${anime.total_eps && anime.total_eps > total ? ` (Total ${anime.total_eps} Episode)` : ''}`;
+
+            const firstEpNum = epList[0].ep_number;
+            const btnWatch1 = document.getElementById("btn-watch-ep1");
+            if (btnWatch1) {
+              btnWatch1.style.opacity = "1";
+              btnWatch1.style.pointerEvents = "auto";
+              btnWatch1.href = `player.html?slug=${encodeURIComponent(slug)}&ep=${firstEpNum}`;
+              btnWatch1.innerHTML = `<span>▶ Tonton Episode ${firstEpNum}</span>`;
+            }
+
+            const epsGrid = document.getElementById("episodes-grid");
+            epsGrid.innerHTML = epList.map(ep => `
+              <a href="player.html?slug=${encodeURIComponent(slug)}&ep=${ep.ep_number}" class="ep-card-item">
+                <div class="ep-card-num">Episode ${ep.ep_number}</div>
+                <div class="ep-card-title">${escapeHtml(ep.title || 'Sub Indo')}</div>
+                <div class="ep-card-play-icon">▶ Putar</div>
+              </a>
+            `).join("");
+          } else {
+            document.getElementById("badge-ep-count").textContent = `Segera Hadir`;
+            document.getElementById("total-eps-label").textContent = `Episode Sedang Disiapkan (Total ${anime.total_eps || 0} Episode Anime)`;
+
+            const btnWatch1 = document.getElementById("btn-watch-ep1");
+            if (btnWatch1) {
+              btnWatch1.style.opacity = "0.6";
+              btnWatch1.style.pointerEvents = "none";
+              btnWatch1.innerHTML = `<span>⏳ Episode Sedang Disiapkan</span>`;
+            }
+
+            const epsGrid = document.getElementById("episodes-grid");
+            epsGrid.innerHTML = `
+              <div class="ep-card-item" style="grid-column: 1/-1; padding: 28px 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.15); border-radius: 12px; background: rgba(255,255,255,0.02);">
+                <div style="font-size: 2.2rem; margin-bottom: 10px;">⏳</div>
+                <div style="font-weight: 700; color: #fff; font-size: 1.1rem; margin-bottom: 6px;">Episode ${escapeHtml(anime.title)} Sedang Disiapkan</div>
+                <div style="color: var(--clr-text-muted); font-size: 0.88rem; max-width: 520px; margin: 0 auto 16px; line-height: 1.6;">
+                  Serial ini memiliki total data ${anime.total_eps || 'sejumlah'} episode. Episode sedang dalam proses penataan oleh server.
+                </div>
+                <div id="available-franchise-container" style="margin-top: 15px;"></div>
+              </div>
+            `;
+            loadFranchiseAlternatives(anime);
+          }
+        }
+
+        updateEpisodesDisplay(episodes);
+
+        // Jika nomor episode melompat (misal mulai dari >1), otomatis perbaiki & sinkronkan di background
+        if (episodes.length > 0 && episodes[0].ep_number > 1) {
+          fetch(`${API_BASE}/api/animes/${encodeURIComponent(slug)}/repair-episodes`, {
+            method: "POST",
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+          }).then(r => r.json()).then(resData => {
+            if (resData.data && resData.data.episodes && resData.data.episodes.length > 0) {
+              updateEpisodesDisplay(resData.data.episodes);
+            }
+          }).catch(err => console.warn("Auto-repair episode error:", err));
+        }
+
+        // Show content
+        document.getElementById("detail-loader").style.display = "none";
+        document.getElementById("detail-content").style.display = "block";
+        updateDetailWatchlistUI();
+
+        // Load Likes & Stats
+        loadDetailStats(slug);
+
+        // Load Comments
+        loadDetailComments(slug);
+
+        // Load Related Animes
+        loadRelatedAnimes(genreList[0] || "Action");
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("detail-loader").innerHTML = `
+          <div style="text-align:center;padding:40px 20px;">
+            <p style="color:var(--clr-text-dim);font-size:1.1rem;margin-bottom:8px;">Anime tidak ditemukan atau sedang disiapkan.</p>
+            <p style="color:var(--clr-text-muted);font-size:0.9rem;margin-bottom:20px;">Silakan cari judul anime lain atau tonton anime populer hari ini.</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <a href="index.html" class="btn btn-primary">🔥 Tonton Anime Populer</a>
+              <a href="search.html" class="btn btn-secondary">🔍 Cari Anime Lain</a>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    async function loadRelatedAnimes(genre) {
+      const grid = document.getElementById("related-anime-grid");
+      try {
+        const res = await fetch(`${API_BASE}/api/animes/genre/${encodeURIComponent(genre)}?limit=6`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        const list = json.data?.animes || [];
+        if (list.length > 0) {
+          grid.innerHTML = list.map(a => `
+            <a href="detail.html?slug=${encodeURIComponent(a.slug)}" class="anime-card animate-fade-up">
+              <div class="anime-card-thumb">
+                <img src="${(a.thumbnail && a.thumbnail.trim()) ? a.thumbnail : 'icons/default_poster.svg'}" alt="${a.title}" loading="lazy" onerror="imgFallback(this)">
+                <div class="anime-card-overlay">
+                  <div class="anime-card-play">▶</div>
+                </div>
+                <span class="anime-card-ep-badge">${a.ep_count > 0 ? a.ep_count + ' Eps' : (a.status || 'Ongoing')}</span>
+                ${a.score > 0 ? `<span class="anime-card-score">⭐ ${a.score}</span>` : ''}
+              </div>
+              <div class="anime-card-body">
+                <div class="anime-card-title">${a.title}</div>
+                <div class="anime-card-genre">${a.genre ? a.genre.split(',').slice(0, 2).join(', ') : 'Anime Series'}</div>
+              </div>
+            </a>
+          `).join("");
+        }
+      } catch (e) {
+        console.warn("Gagal load related:", e);
+      }
+    }
+  </script>
+
+</body>
+</html>
