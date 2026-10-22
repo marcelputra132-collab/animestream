@@ -21,15 +21,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.5
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
+
+      - name: Configure Android SDK
+        run: |
+          echo "sdk.dir=/usr/local/lib/android/sdk" > android_app/local.properties
 
       - name: Build APK with Gradle
         working-directory: android_app
-        env:
-          ANDROID_HOME: /usr/local/lib/android/sdk
         run: |
-          gradle assembleDebug --no-daemon --stacktrace
+          gradle assembleDebug --stacktrace
           mkdir -p ../dist
           cp app/build/outputs/apk/debug/*.apk ../dist/AnimeStream.apk
 
